@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import HeroSection from '../components/HeroSection';
 import AboutSection from '../components/AboutSection';
-import JackpotBanner from '../components/JackpotBanner';
 
 const HomePage: React.FC = () => {
   return (
@@ -12,7 +11,6 @@ const HomePage: React.FC = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <JackpotBanner />
       <HeroSection />
       <AboutSection />
     </motion.div>

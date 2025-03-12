@@ -10,11 +10,18 @@
   --text: #ffffff;
 }
 
+/* Add cursor: none to body to hide default cursor */
 body {
   font-family: 'Inter', sans-serif;
   background-color: var(--background);
   color: var(--text);
   overflow-x: hidden;
+  cursor: none;
+}
+
+/* Ensure cursor: none applies to all clickable elements */
+a, button, [role="button"], .cursor-pointer {
+  cursor: none;
 }
 
 html {
@@ -65,7 +72,7 @@ html {
   }
 }
 
-/* Animated gradient text with outer glow */
+/* Animated gradient text with reduced initial glow */
 .animated-gradient-text {
   background-clip: text;
   -webkit-background-clip: text;
@@ -74,19 +81,25 @@ html {
   position: relative;
   background-size: 200% 200%;
   animation: gradientShift 4s ease infinite;
-  text-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+  /* Reduced text-shadow intensity */
+  text-shadow: 0 0 8px rgba(138, 43, 226, 0.3);
 }
 
 .duel-text {
   background-image: linear-gradient(45deg, #8a2be2, #ff69b4, #8a2be2);
-  text-shadow: 0 0 20px rgba(138, 43, 226, 0.7);
+  /* Reduced text-shadow intensity */
+  text-shadow: 0 0 10px rgba(138, 43, 226, 0.4);
   position: relative;
 }
 
 .victory-text {
   background-image: linear-gradient(45deg, #ff69b4, #8a2be2, #ff69b4);
-  text-shadow: 0 0 20px rgba(255, 105, 180, 0.7);
+  /* Reduced text-shadow intensity */
+  text-shadow: 0 0 10px rgba(255, 105, 180, 0.4);
   position: relative;
+  /* Add padding to prevent text cutoff */
+  padding-bottom: 0.1em;
+  margin-bottom: 0.05em;
 }
 
 @keyframes gradientShift {
@@ -101,7 +114,7 @@ html {
   }
 }
 
-/* Extra glow effect for animated text */
+/* Reduced glow effect intensity and delayed animation start */
 .duel-text::after, .victory-text::after {
   content: "";
   position: absolute;
@@ -110,17 +123,28 @@ html {
   right: 0;
   bottom: 0;
   z-index: -1;
-  filter: blur(15px);
-  opacity: 0.5;
+  filter: blur(10px);
+  opacity: 0.3; /* Reduced opacity */
   border-radius: 8px;
+  /* Animation delay to reduce initial impact */
+  animation: fadeInGlow 1s ease forwards, gradientShift 4s ease 1s infinite;
+}
+
+@keyframes fadeInGlow {
+  from {
+    opacity: 0.1;
+  }
+  to {
+    opacity: 0.3;
+  }
 }
 
 .duel-text::after {
   background: linear-gradient(45deg, #8a2be2, #ff69b4, #8a2be2);
-  animation: gradientShift 4s ease infinite;
 }
 
 .victory-text::after {
   background: linear-gradient(45deg, #ff69b4, #8a2be2, #ff69b4);
-  animation: gradientShift 4s ease infinite;
+  /* Ensure glow extends below for the 'y' descender */
+  bottom: -0.1em;
 }

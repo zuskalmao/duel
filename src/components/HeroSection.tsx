@@ -24,10 +24,11 @@ const HeroSection: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
+              {/* Added line-height adjustment to ensure proper spacing */}
               <span className="animated-gradient-text duel-text">DUEL</span>{" "}
               your way<br/>
               <span>to </span> 
-              <span className="animated-gradient-text victory-text">victory</span>
+              <span className="animated-gradient-text victory-text inline-block leading-[1.2]">victory</span>
             </motion.h1>
             
             <motion.p 

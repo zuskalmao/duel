@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
+import JackpotBanner from './components/JackpotBanner';
 import HomePage from './pages/HomePage';
 import GamblingPage from './pages/GamblingPage';
 import Footer from './components/Footer';
@@ -77,14 +78,21 @@ function App() {
         />
       ))}
       
-      <Header />
+      {/* Fixed Navigation Header */}
+      <div className="fixed top-0 left-0 right-0 z-50 flex flex-col">
+        <Header />
+        <JackpotBanner />
+      </div>
       
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/gambling" element={<GamblingPage />} />
-        </Routes>
-      </AnimatePresence>
+      {/* Main Content with padding for fixed headers */}
+      <div className="pt-32">
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/gambling" element={<GamblingPage />} />
+          </Routes>
+        </AnimatePresence>
+      </div>
       
       <Footer />
     </div>

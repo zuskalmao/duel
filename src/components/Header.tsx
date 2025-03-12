@@ -153,7 +153,7 @@ const Header: React.FC = () => {
             
             <button 
               onClick={() => navigate('/duels')}
-              className="btn-primary btn-sm py-1 flex items-center group"
+              className="btn-shine flex items-center group"
             >
               Join Now
               <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />

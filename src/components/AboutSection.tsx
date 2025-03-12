@@ -1,41 +1,45 @@
 import React, { useRef, useEffect } from 'react';
-import { Sword, Shield, Flame, Trophy } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Sword, Shield, Flame, Trophy, ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const AboutSection: React.FC = () => {
+  const navigate = useNavigate();
   const sectionRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const featureGridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Set up animations with a delay to ensure DOM elements are properly rendered
     const setupAnimations = () => {
-      if (sectionRef.current && textRef.current) {
+      if (sectionRef.current && textRef.current && featureGridRef.current) {
+        gsap.set(textRef.current, { opacity: 0, y: 50 });
+        gsap.set(".feature-card", { opacity: 0, y: 30 });
+        
         ScrollTrigger.refresh();
         
-        gsap.from(textRef.current, {
-          opacity: 0,
-          y: 50,
+        gsap.to(textRef.current, {
+          opacity: 1,
+          y: 0,
           duration: 1,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 80%",
-            end: "bottom 80%",
             toggleActions: "play none none none"
           }
         });
 
-        gsap.from(".feature-card", {
-          opacity: 0,
-          y: 30,
+        gsap.to(".feature-card", {
+          opacity: 1,
+          y: 0,
           stagger: 0.2,
           duration: 0.8,
           scrollTrigger: {
-            trigger: ".features-grid",
+            trigger: featureGridRef.current,
             start: "top 80%",
-            end: "bottom 80%",
             toggleActions: "play none none none"
           }
         });
@@ -56,7 +60,7 @@ const AboutSection: React.FC = () => {
     <section id="about" ref={sectionRef} className="py-20 md:py-32 bg-background-dark">
       <div className="container mx-auto px-4">
         <div ref={textRef} className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="section-title">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
             The <span className="text-primary">Ultimate</span> Memecoin Battle Platform
           </h2>
           <p className="text-lg md:text-xl text-white/70 mt-4">
@@ -64,7 +68,7 @@ const AboutSection: React.FC = () => {
           </p>
         </div>
 
-        <div className="features-grid grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
+        <div ref={featureGridRef} className="features-grid grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
           <FeatureCard 
             icon={<Sword className="w-8 h-8 text-primary" />}
             title="1v1 Battles"
@@ -85,6 +89,16 @@ const AboutSection: React.FC = () => {
             title="Community Driven"
             description="Governance through token holdings. The community decides on new features and upgrades to the platform."
           />
+        </div>
+
+        <div className="mt-16 text-center">
+          <button 
+            className="btn-primary text-lg group"
+            onClick={() => navigate('/gambling')}
+          >
+            Enter The Arena
+            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </button>
         </div>
       </div>
     </section>

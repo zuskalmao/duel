@@ -4,26 +4,40 @@ import gsap from 'gsap';
 
 const JackpotSection: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [timeRemaining, setTimeRemaining] = useState({ minutes: 12, seconds: 45 });
+  const [timeRemaining, setTimeRemaining] = useState({ minutes: 0, seconds: 0 });
   const [participants, setParticipants] = useState(187);
-  const [jackpotAmount, setJackpotAmount] = useState(24500);
+  const [jackpotAmount, setJackpotAmount] = useState(28500);
   
-  // Simulated countdown timer
+  // Calculate time until next half-hour mark
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeRemaining(prev => {
-        if (prev.seconds > 0) {
-          return { ...prev, seconds: prev.seconds - 1 };
-        } else if (prev.minutes > 0) {
-          return { minutes: prev.minutes - 1, seconds: 59 };
-        } else {
-          // Reset timer when it hits zero
-          return { minutes: 30, seconds: 0 };
-        }
+    const calculateTimeRemaining = () => {
+      const now = new Date();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+      
+      // Calculate minutes and seconds until next 30-minute mark
+      let minutesUntilNext;
+      if (minutes < 30) {
+        minutesUntilNext = 30 - minutes - 1;
+      } else {
+        minutesUntilNext = 60 - minutes - 1;
+      }
+      
+      const secondsUntilNext = 60 - seconds;
+      
+      setTimeRemaining({
+        minutes: minutesUntilNext,
+        seconds: secondsUntilNext
       });
-    }, 1000);
+    };
     
-    return () => clearInterval(timer);
+    // Initial calculation
+    calculateTimeRemaining();
+    
+    // Update every second
+    const interval = setInterval(calculateTimeRemaining, 1000);
+    
+    return () => clearInterval(interval);
   }, []);
   
   // Simulate growing jackpot and participants
@@ -92,7 +106,7 @@ const JackpotSection: React.FC = () => {
             Massive <span className="text-primary">Jackpot</span> Duels
           </h2>
           <p className="text-lg md:text-xl text-white/70 mt-4">
-            Join our community-wide PvE jackpot duels that occur every 30 minutes. The more tokens you stake, the better your chances to win big!
+            Join our community-wide jackpot duels that occur every 30 minutes. The more tokens you stake, the better your chances to win big!
           </p>
         </div>
         

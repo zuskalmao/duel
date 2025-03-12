@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import { ArrowRight, Sword } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, Sword, Gamepad2 } from 'lucide-react';
 import gsap from 'gsap';
 
 const HeroSection: React.FC = () => {
+  const navigate = useNavigate();
   const heroRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -100,11 +102,19 @@ const HeroSection: React.FC = () => {
             The first Solana memecoin with real dueling utility. Stake your $DUEL tokens and challenge others in 1v1 battles or compete for massive jackpots.
           </p>
           <div className="mt-10 flex flex-wrap gap-4 hero-buttons justify-center lg:justify-start">
-            <button className="btn-primary text-lg group">
-              Join The Duel
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <button 
+              className="btn-primary text-lg group"
+              onClick={() => navigate('/gambling')}
+            >
+              Enter The Arena
+              <Gamepad2 className="ml-2 w-5 h-5" />
             </button>
-            <button className="btn-outline text-lg">Learn More</button>
+            <button 
+              className="btn-outline text-lg"
+              onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              Learn More
+            </button>
           </div>
         </div>
         

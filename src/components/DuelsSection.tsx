@@ -1,52 +1,74 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Swords, User, Award, ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const DuelsSection: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const [selectedTab, setSelectedTab] = useState('active');
   
+  // Initialize animations once when component mounts
   useEffect(() => {
-    if (sectionRef.current) {
-      gsap.from(".duels-title", {
-        opacity: 0,
-        y: 30,
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          end: "bottom 80%",
-          toggleActions: "play none none none"
-        }
-      });
-      
-      gsap.from(".duels-tabs", {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        delay: 0.3,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          end: "bottom 80%",
-          toggleActions: "play none none none"
-        }
-      });
-      
-      gsap.from(".duel-card", {
-        opacity: 0,
-        y: 40,
-        stagger: 0.15,
-        duration: 0.8,
-        delay: 0.5,
-        scrollTrigger: {
-          trigger: ".duels-content",
-          start: "top 90%",
-          end: "bottom 80%",
-          toggleActions: "play none none none"
-        }
-      });
+    // Preload any duel cards that might be shown initially to prevent loading issues
+    const preloadCards = document.querySelectorAll('.duel-card');
+    if (preloadCards.length > 0) {
+      gsap.set(preloadCards, { opacity: 0, y: 40 });
     }
+
+    // Set up animations with delay to ensure DOM is ready
+    const setupAnimations = () => {
+      if (titleRef.current && tabsRef.current && contentRef.current) {
+        ScrollTrigger.refresh();
+        
+        gsap.to(titleRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none"
+          }
+        });
+        
+        gsap.to(tabsRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none"
+          }
+        });
+        
+        gsap.to(".duel-card", {
+          opacity: 1,
+          y: 0,
+          stagger: 0.15,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: contentRef.current,
+            start: "top 90%",
+            toggleActions: "play none none none"
+          }
+        });
+      }
+    };
+
+    // Allow time for DOM to render properly
+    const timeoutId = setTimeout(setupAnimations, 100);
+    
+    return () => {
+      clearTimeout(timeoutId);
+      // Clean up any ScrollTrigger instances to prevent memory leaks
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill(false));
+    };
   }, []);
   
   return (
@@ -73,7 +95,11 @@ const DuelsSection: React.FC = () => {
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-16 duels-title">
+        <div 
+          ref={titleRef} 
+          className="text-center max-w-3xl mx-auto mb-16 duels-title"
+          style={{ opacity: 0, transform: 'translateY(30px)' }}
+        >
           <h2 className="section-title">
             1v1 <span className="text-primary">Duels</span>
           </h2>
@@ -82,7 +108,11 @@ const DuelsSection: React.FC = () => {
           </p>
         </div>
         
-        <div className="duels-tabs flex justify-center mb-12">
+        <div 
+          ref={tabsRef} 
+          className="duels-tabs flex justify-center mb-12"
+          style={{ opacity: 0, transform: 'translateY(20px)' }}
+        >
           <div className="bg-background-dark rounded-full p-1 inline-flex">
             <button 
               className={`px-6 py-2 rounded-full transition-all ${
@@ -117,7 +147,7 @@ const DuelsSection: React.FC = () => {
           </div>
         </div>
         
-        <div className="duels-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div ref={contentRef} className="duels-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {selectedTab === 'active' && (
             <>
               <DuelCard 

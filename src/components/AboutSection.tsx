@@ -10,32 +10,46 @@ const AboutSection: React.FC = () => {
   const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (sectionRef.current && textRef.current) {
-      gsap.from(textRef.current, {
-        opacity: 0,
-        y: 50,
-        duration: 1,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          end: "bottom 80%",
-          toggleActions: "play none none none"
-        }
-      });
+    // Set up animations with a delay to ensure DOM elements are properly rendered
+    const setupAnimations = () => {
+      if (sectionRef.current && textRef.current) {
+        ScrollTrigger.refresh();
+        
+        gsap.from(textRef.current, {
+          opacity: 0,
+          y: 50,
+          duration: 1,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 80%",
+            end: "bottom 80%",
+            toggleActions: "play none none none"
+          }
+        });
 
-      gsap.from(".feature-card", {
-        opacity: 0,
-        y: 30,
-        stagger: 0.2,
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: ".features-grid",
-          start: "top 80%",
-          end: "bottom 80%",
-          toggleActions: "play none none none"
-        }
-      });
-    }
+        gsap.from(".feature-card", {
+          opacity: 0,
+          y: 30,
+          stagger: 0.2,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: ".features-grid",
+            start: "top 80%",
+            end: "bottom 80%",
+            toggleActions: "play none none none"
+          }
+        });
+      }
+    };
+
+    // Allow time for DOM to render properly
+    const timeoutId = setTimeout(setupAnimations, 100);
+    
+    return () => {
+      clearTimeout(timeoutId);
+      // Clean up any ScrollTrigger instances to prevent memory leaks
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill(false));
+    };
   }, []);
 
   return (

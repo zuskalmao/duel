@@ -85,8 +85,8 @@ const HeroSection: React.FC = () => {
         ))}
       </div>
 
-      <div className="container mx-auto px-4 z-10 flex flex-col-reverse lg:flex-row items-center">
-        <div className="lg:w-1/2">
+      <div className="container mx-auto px-4 z-10 flex flex-col lg:flex-row items-center">
+        <div className="lg:w-1/2 text-center lg:text-left">
           <h1 
             ref={titleRef}
             className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
@@ -95,11 +95,11 @@ const HeroSection: React.FC = () => {
           </h1>
           <p
             ref={subtitleRef}
-            className="mt-6 text-xl md:text-2xl text-white/70 max-w-2xl"
+            className="mt-6 text-xl md:text-2xl text-white/70 max-w-2xl mx-auto lg:mx-0"
           >
             The first Solana memecoin with real dueling utility. Stake your $DUEL tokens and challenge others in 1v1 battles or compete for massive jackpots.
           </p>
-          <div className="mt-10 flex flex-wrap gap-4 hero-buttons">
+          <div className="mt-10 flex flex-wrap gap-4 hero-buttons justify-center lg:justify-start">
             <button className="btn-primary text-lg group">
               Join The Duel
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -108,19 +108,13 @@ const HeroSection: React.FC = () => {
           </div>
         </div>
         
-        <div className="lg:w-1/2 flex justify-center mb-10 lg:mb-0">
+        <div className="lg:w-1/2 flex justify-center mb-10 lg:mb-0 mt-10 lg:mt-0">
           <div className="hero-coin relative w-64 h-64 md:w-80 md:h-80 rounded-full bg-gradient-to-br from-primary via-primary-light to-accent flex items-center justify-center border-4 border-white/10 animate-float shadow-lg shadow-primary/20">
             <Sword className="w-32 h-32 md:w-40 md:h-40 text-white" />
             <div className="absolute inset-0 rounded-full border-2 border-white/20 animate-pulse-slow"></div>
             <div className="absolute -inset-4 rounded-full border border-white/10 animate-glow"></div>
           </div>
         </div>
-      </div>
-      
-      {/* Scroll indicator */}
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-        <span className="text-white/50 mb-2">Scroll Down</span>
-        <div className="w-0.5 h-10 bg-white/20 animate-pulse"></div>
       </div>
     </div>
   );

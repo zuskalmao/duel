@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sword, Twitter, Discord, Telegram, Github } from 'lucide-react';
+import { Sword, Twitter, MessageSquare, Telegram, Github } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
                 <Twitter />
               </a>
               <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-primary transition-colors">
-                <Discord />
+                <MessageSquare />
               </a>
               <a href="https://telegram.org" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-primary transition-colors">
                 <Telegram />

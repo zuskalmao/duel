@@ -19,6 +19,7 @@ body {
   background-color: var(--background);
   color: white;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  cursor: none; /* Hide default cursor */
 }
 
 /* Custom scrollbar */
@@ -50,6 +51,10 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
+}
+
+.battle-text {
+  animation: textShadowPulse 3s infinite alternate;
 }
 
 .btn-primary {
@@ -106,6 +111,18 @@ body {
   }
 }
 
+@keyframes textShadowPulse {
+  0% {
+    filter: drop-shadow(0 0 5px rgba(138, 43, 226, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(138, 43, 226, 0.6));
+  }
+  100% {
+    filter: drop-shadow(0 0 18px rgba(236, 72, 153, 0.9));
+  }
+}
+
 .animate-float {
   animation: float 5s ease-in-out infinite;
 }
@@ -116,4 +133,14 @@ body {
 
 .animate-glow {
   animation: glow 4s linear infinite;
+}
+
+/* Hide cursor on all elements */
+* {
+  cursor: none !important;
+}
+
+/* Make sure links and buttons still visually indicate they're clickable */
+a:hover, button:hover, [role="button"]:hover, .cursor-pointer:hover {
+  @apply transition-colors;
 }

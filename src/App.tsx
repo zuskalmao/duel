@@ -10,6 +10,7 @@ function App() {
   const location = useLocation();
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [cursorTrail, setCursorTrail] = useState<{ x: number; y: number; opacity: number }[]>([]);
+  const [isPointerOverClickable, setIsPointerOverClickable] = useState(false);
 
   // Enhanced cursor effect with trail
   useEffect(() => {
@@ -26,6 +27,11 @@ function App() {
           opacity: Math.max(0, 1 - index * 0.09)
         }));
       });
+      
+      // Check if mouse is over clickable element
+      const element = document.elementFromPoint(clientX, clientY);
+      const isClickable = element?.closest('a, button, [role="button"], .cursor-pointer') !== null;
+      setIsPointerOverClickable(isClickable);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -38,12 +44,15 @@ function App() {
     <div className="relative bg-background text-white overflow-hidden">
       {/* Enhanced custom cursor with trail effect */}
       <div 
-        className="cursor-dot fixed w-6 h-6 rounded-full bg-primary/50 backdrop-blur-sm z-50 pointer-events-none mix-blend-screen hidden md:block"
+        className={`cursor-dot fixed w-6 h-6 rounded-full backdrop-blur-sm z-50 pointer-events-none mix-blend-screen hidden md:block ${
+          isPointerOverClickable ? 'bg-primary scale-125' : 'bg-primary/50'
+        }`}
         style={{ 
           left: `${cursorPosition.x}px`, 
           top: `${cursorPosition.y}px`,
           transform: 'translate(-50%, -50%)',
-          boxShadow: '0 0 20px 5px rgba(138, 43, 226, 0.4)'
+          boxShadow: '0 0 20px 5px rgba(138, 43, 226, 0.4)',
+          transition: 'background-color 0.2s, transform 0.2s'
         }}
       >
         <div className="absolute inset-0 rounded-full border border-white/40 animate-ping"></div>

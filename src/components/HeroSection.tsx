@@ -8,6 +8,7 @@ const HeroSection: React.FC = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const battleRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     if (heroRef.current && titleRef.current && subtitleRef.current) {
@@ -16,32 +17,43 @@ const HeroSection: React.FC = () => {
       tl.from(titleRef.current, {
         y: 50,
         opacity: 0,
-        duration: 1,
+        duration: 0.8, // Slightly faster animation
         ease: "power3.out"
       })
       .from(subtitleRef.current, {
         y: 30,
         opacity: 0,
-        duration: 0.8,
+        duration: 0.6, // Much faster fade-in
         ease: "power3.out"
-      }, "-=0.4")
+      }, "-=0.3") // Start sooner
       .from(".hero-buttons button", {
         y: 20,
         opacity: 0,
-        stagger: 0.2,
-        duration: 0.6,
+        stagger: 0.15, // Faster stagger
+        duration: 0.5, // Faster animation
         ease: "power3.out"
-      }, "-=0.4")
+      }, "-=0.3") // Start sooner
       .from(".hero-coin", {
         scale: 0.5,
         opacity: 0,
         rotation: "-45deg",
         duration: 1.2,
         ease: "elastic.out(1, 0.4)"
-      }, "-=0.8");
+      }, "-=0.6"); // Start sooner
+      
+      // Animate the "Battle" text glow effect
+      if (battleRef.current) {
+        gsap.to(battleRef.current, {
+          filter: "drop-shadow(0 0 15px rgba(138, 43, 226, 0.8))",
+          repeat: -1,
+          yoyo: true,
+          duration: 2,
+          ease: "sine.inOut"
+        });
+      }
     }
   }, []);
-
+  
   // Parallax effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -61,6 +73,21 @@ const HeroSection: React.FC = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  // Background bubble animation (independent of cursor)
+  useEffect(() => {
+    // Animate background bubbles
+    gsap.to(".bg-bubble", {
+      x: "random(-20, 20)", 
+      y: "random(-20, 20)", 
+      rotation: "random(-15, 15)",
+      duration: "random(8, 15)",
+      ease: "sine.inOut",
+      repeat: -1,
+      yoyo: true,
+      stagger: 0.2
+    });
+  }, []);
+
   return (
     <div 
       ref={heroRef}
@@ -74,7 +101,7 @@ const HeroSection: React.FC = () => {
         {[...Array(10)].map((_, i) => (
           <div 
             key={i}
-            className="absolute rounded-full bg-primary/5 animate-pulse-slow"
+            className="absolute rounded-full bg-primary/5 animate-pulse-slow bg-bubble"
             style={{
               width: `${Math.random() * 20 + 5}rem`,
               height: `${Math.random() * 20 + 5}rem`,
@@ -93,7 +120,7 @@ const HeroSection: React.FC = () => {
             ref={titleRef}
             className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
           >
-            <span className="gradient-text">Battle</span> Your Way to <span className="text-primary">Victory</span>
+            <span className="gradient-text battle-text" ref={battleRef}>Battle</span> Your Way to <span className="text-primary">Victory</span>
           </h1>
           <p
             ref={subtitleRef}

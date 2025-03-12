@@ -38,8 +38,13 @@ const Header: React.FC = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
-          <a href="/#about" className="text-white/80 hover:text-primary transition-colors">About</a>
+        <nav className="hidden md:flex items-center gap-8">
+          <a 
+            href="/#about" 
+            className="text-white/80 hover:text-primary transition-colors"
+          >
+            About
+          </a>
           <div 
             className={`cursor-pointer text-white/80 hover:text-primary transition-colors ${
               location.pathname === '/gambling' ? 'text-primary' : ''

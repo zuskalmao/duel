@@ -24,10 +24,10 @@ const HeroSection: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <span className="text-primary battle-text">Battle</span>{" "}
-              Your Way<br/>
+              <span className="animated-gradient-text duel-text">DUEL</span>{" "}
+              your way<br/>
               <span>to </span> 
-              <span className="text-accent">Victory</span>
+              <span className="animated-gradient-text victory-text">victory</span>
             </motion.h1>
             
             <motion.p 
@@ -47,7 +47,7 @@ const HeroSection: React.FC = () => {
             >
               <button 
                 className="btn-primary text-lg px-8 py-4 font-bold"
-                onClick={() => navigate('/gambling')}
+                onClick={() => navigate('/duels')}
               >
                 <Sword className="w-5 h-5 mr-2" />
                 Enter Arena

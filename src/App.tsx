@@ -42,9 +42,9 @@ function App() {
 
   return (
     <div className="relative bg-background text-white overflow-hidden">
-      {/* Enhanced custom cursor with trail effect */}
+      {/* Enhanced custom cursor with trail effect - moved z-index to 9999 to always be on top */}
       <div 
-        className={`cursor-dot fixed w-6 h-6 rounded-full backdrop-blur-sm z-50 pointer-events-none mix-blend-screen hidden md:block ${
+        className={`cursor-dot fixed w-6 h-6 rounded-full backdrop-blur-sm z-[9999] pointer-events-none mix-blend-screen hidden md:block ${
           isPointerOverClickable ? 'bg-primary scale-125' : 'bg-primary/50'
         }`}
         style={{ 
@@ -58,7 +58,7 @@ function App() {
         <div className="absolute inset-0 rounded-full border border-white/40 animate-ping"></div>
       </div>
       
-      {/* Cursor trail */}
+      {/* Cursor trail - also increased z-index */}
       {cursorTrail.map((point, index) => (
         <div 
           key={index}
@@ -72,7 +72,7 @@ function App() {
             backgroundColor: index % 2 ? 'rgba(138, 43, 226, 0.4)' : 'rgba(255, 105, 180, 0.4)',
             transform: 'translate(-50%, -50%)',
             transition: 'opacity 0.1s ease',
-            zIndex: 49 - index
+            zIndex: 9000 - index
           }}
         />
       ))}
@@ -85,7 +85,7 @@ function App() {
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<HomePage />} />
-            <Route path="/gambling" element={<GamblingPage />} />
+            <Route path="/duels" element={<GamblingPage />} />
           </Routes>
         </AnimatePresence>
       </div>

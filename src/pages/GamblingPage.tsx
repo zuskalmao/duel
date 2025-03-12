@@ -16,7 +16,7 @@ const GamblingPage: React.FC = () => {
         <div className="bg-background-dark py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="text-primary">$DUEL</span> Gambling Arena
+              <span className="text-primary">$DUEL</span> Arena
             </h1>
             <p className="text-xl text-white/70 max-w-2xl mx-auto">
               Stake your tokens, challenge opponents, and win big in our jackpot events

@@ -68,8 +68,8 @@ const Header: React.FC = () => {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50 flex flex-col">
-      {/* Main Header */}
+    <div className="fixed top-0 left-0 w-full z-40 flex flex-col">
+      {/* Main Header - reduced z-index to fix cursor issue */}
       <header className={`transition-all duration-300 ${
         isScrolled ? 'py-2 bg-background/90 backdrop-blur-md shadow-lg' : 'py-3 bg-background'
       }`}>
@@ -96,9 +96,9 @@ const Header: React.FC = () => {
               </a>
               <div 
                 className={`cursor-pointer text-white/80 hover:text-primary transition-colors text-base font-medium ${
-                  location.pathname === '/gambling' ? 'text-primary' : ''
+                  location.pathname === '/duels' ? 'text-primary' : ''
                 }`}
-                onClick={() => navigate('/gambling')}
+                onClick={() => navigate('/duels')}
               >
                 Arena
               </div>
@@ -152,7 +152,7 @@ const Header: React.FC = () => {
             </div>
             
             <button 
-              onClick={() => navigate('/gambling')}
+              onClick={() => navigate('/duels')}
               className="btn-primary btn-sm py-1 flex items-center group"
             >
               Join Now
@@ -175,9 +175,9 @@ const Header: React.FC = () => {
           </a>
           <div 
             className={`cursor-pointer text-white/80 hover:text-primary transition-colors py-2 ${
-              location.pathname === '/gambling' ? 'text-primary' : ''
+              location.pathname === '/duels' ? 'text-primary' : ''
             }`}
-            onClick={() => navigate('/gambling')}
+            onClick={() => navigate('/duels')}
           >
             Arena
           </div>

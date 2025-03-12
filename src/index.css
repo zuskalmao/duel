@@ -56,65 +56,6 @@ body {
   @apply bg-primary hover:bg-primary-light text-white px-6 py-3 rounded-lg flex items-center justify-center transition-all duration-300 font-medium shadow-lg shadow-primary/25 hover:shadow-primary/40;
 }
 
-.btn-primary<boltAction type="file" filePath="src/index.css">
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --primary: #9333ea;
-  --primary-light: #a855f7;
-  --accent: #ec4899;
-  --background: #0f0f1a;
-  --background-dark: #090912;
-  --background-light: #14141f;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background-color: var(--background);
-  color: white;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--background-dark);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-light);
-}
-
-/* Common styles */
-.section-title {
-  @apply text-4xl md:text-5xl font-bold;
-}
-
-.gradient-text {
-  background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-}
-
-.btn-primary {
-  @apply bg-primary hover:bg-primary-light text-white px-6 py-3 rounded-lg flex items-center justify-center transition-all duration-300 font-medium shadow-lg shadow-primary/25 hover:shadow-primary/40;
-}
-
 .btn-outline {
   @apply border border-white/20 hover:border-white/50 bg-white/5 hover:bg-white/10 text-white px-6 py-3 rounded-lg flex items-center justify-center transition-all duration-300 font-medium;
 }

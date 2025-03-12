@@ -24,40 +24,47 @@ const Header: React.FC = () => {
 
   return (
     <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-      isScrolled ? 'py-3 bg-background/90 backdrop-blur-md shadow-lg' : 'py-6 bg-transparent'
+      isScrolled ? 'py-3 bg-background/90 backdrop-blur-md shadow-lg' : 'py-4 bg-transparent'
     }`}>
-      <div className="container mx-auto px-4 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+        {/* Logo - Left Side */}
         <div 
           className="flex items-center cursor-pointer"
           onClick={() => navigate('/')}
         >
-          <Sword className="w-8 h-8 text-primary mr-2" />
-          <span className="text-2xl font-bold tracking-tight">
+          <Sword className="w-7 h-7 text-primary mr-2" />
+          <span className="text-xl font-bold tracking-tight">
             <span className="text-primary">$</span>DUEL
           </span>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
-          <a 
-            href="/#about" 
-            className="text-white/80 hover:text-primary transition-colors"
-          >
-            About
-          </a>
-          <div 
-            className={`cursor-pointer text-white/80 hover:text-primary transition-colors ${
-              location.pathname === '/gambling' ? 'text-primary' : ''
-            }`}
-            onClick={() => navigate('/gambling')}
-          >
-            Arena
+        {/* Navigation Links - Center */}
+        <nav className="hidden md:flex items-center justify-center flex-1 mx-4">
+          <div className="flex items-center space-x-10">
+            <a 
+              href="/#about" 
+              className="text-white/80 hover:text-primary transition-colors text-base font-medium"
+            >
+              About
+            </a>
+            <div 
+              className={`cursor-pointer text-white/80 hover:text-primary transition-colors text-base font-medium ${
+                location.pathname === '/gambling' ? 'text-primary' : ''
+              }`}
+              onClick={() => navigate('/gambling')}
+            >
+              Arena
+            </div>
           </div>
-          <button className="btn-primary">
+        </nav>
+
+        {/* Connect Wallet - Right Side */}
+        <div className="hidden md:block">
+          <button className="btn-primary whitespace-nowrap">
             <Wallet className="w-5 h-5 mr-2" />
             Connect Wallet
           </button>
-        </nav>
+        </div>
 
         {/* Mobile Menu Button */}
         <button 

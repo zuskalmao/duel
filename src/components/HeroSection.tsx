@@ -9,6 +9,7 @@ const HeroSection: React.FC = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const battleRef = useRef<HTMLSpanElement>(null);
+  const backgroundBubblesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (heroRef.current && titleRef.current && subtitleRef.current) {
@@ -17,29 +18,29 @@ const HeroSection: React.FC = () => {
       tl.from(titleRef.current, {
         y: 50,
         opacity: 0,
-        duration: 0.8, // Slightly faster animation
+        duration: 0.6,
         ease: "power3.out"
       })
       .from(subtitleRef.current, {
         y: 30,
         opacity: 0,
-        duration: 0.6, // Much faster fade-in
+        duration: 0.4,
         ease: "power3.out"
-      }, "-=0.3") // Start sooner
+      }, "-=0.3")
       .from(".hero-buttons button", {
         y: 20,
         opacity: 0,
-        stagger: 0.15, // Faster stagger
-        duration: 0.5, // Faster animation
+        stagger: 0.15,
+        duration: 0.4,
         ease: "power3.out"
-      }, "-=0.3") // Start sooner
+      }, "-=0.3")
       .from(".hero-coin", {
         scale: 0.5,
         opacity: 0,
         rotation: "-45deg",
         duration: 1.2,
         ease: "elastic.out(1, 0.4)"
-      }, "-=0.6"); // Start sooner
+      }, "-=0.6");
       
       // Animate the "Battle" text glow effect
       if (battleRef.current) {
@@ -54,7 +55,7 @@ const HeroSection: React.FC = () => {
     }
   }, []);
   
-  // Parallax effect
+  // Parallax effect ONLY for the hero coin
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
@@ -73,19 +74,57 @@ const HeroSection: React.FC = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Background bubble animation (independent of cursor)
+  // Independent background bubble animation
   useEffect(() => {
-    // Animate background bubbles
-    gsap.to(".bg-bubble", {
-      x: "random(-20, 20)", 
-      y: "random(-20, 20)", 
-      rotation: "random(-15, 15)",
-      duration: "random(8, 15)",
-      ease: "sine.inOut",
-      repeat: -1,
-      yoyo: true,
-      stagger: 0.2
-    });
+    if (backgroundBubblesRef.current) {
+      // Create fixed background bubbles with predefined positions
+      const bubbles = [];
+      const bubbleCount = 10;
+      
+      for (let i = 0; i < bubbleCount; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'absolute rounded-full bg-primary/5';
+        
+        // Set fixed initial positions that won't change
+        const size = Math.random() * 20 + 5;
+        const top = Math.random() * 100;
+        const left = Math.random() * 100;
+        const opacity = Math.random() * 0.5;
+        
+        bubble.style.width = `${size}rem`;
+        bubble.style.height = `${size}rem`;
+        bubble.style.top = `${top}%`;
+        bubble.style.left = `${left}%`;
+        bubble.style.opacity = opacity.toString();
+        
+        backgroundBubblesRef.current.appendChild(bubble);
+        bubbles.push(bubble);
+      }
+      
+      // Animate each bubble independently
+      bubbles.forEach((bubble, index) => {
+        // Create a unique animation for each bubble
+        gsap.to(bubble, {
+          x: gsap.utils.random(-30, 30),
+          y: gsap.utils.random(-30, 30),
+          rotation: gsap.utils.random(-15, 15),
+          duration: gsap.utils.random(8, 15),
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          delay: index * 0.2
+        });
+      });
+      
+      return () => {
+        // Clean up bubbles on unmount
+        bubbles.forEach(bubble => {
+          if (backgroundBubblesRef.current?.contains(bubble)) {
+            backgroundBubblesRef.current.removeChild(bubble);
+          }
+        });
+      };
+    }
   }, []);
 
   return (
@@ -96,23 +135,11 @@ const HeroSection: React.FC = () => {
       {/* Gradient background */}
       <div className="absolute inset-0 bg-gradient-radial from-background-light via-background to-background-dark"></div>
       
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(10)].map((_, i) => (
-          <div 
-            key={i}
-            className="absolute rounded-full bg-primary/5 animate-pulse-slow bg-bubble"
-            style={{
-              width: `${Math.random() * 20 + 5}rem`,
-              height: `${Math.random() * 20 + 5}rem`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              opacity: Math.random() * 0.5
-            }}
-          ></div>
-        ))}
-      </div>
+      {/* Animated background elements with ref for direct DOM manipulation */}
+      <div 
+        ref={backgroundBubblesRef}
+        className="absolute inset-0 overflow-hidden"
+      ></div>
 
       <div className="container mx-auto px-4 z-10 flex flex-col lg:flex-row items-center">
         <div className="lg:w-1/2 text-center lg:text-left">

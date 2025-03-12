@@ -51,6 +51,7 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
+  filter: drop-shadow(0 0 8px rgba(138, 43, 226, 0.5));
 }
 
 .battle-text {
@@ -138,6 +139,17 @@ body {
 /* Hide cursor on all elements */
 * {
   cursor: none !important;
+}
+
+/* For mobile/touch devices, restore cursor */
+@media (hover: none) {
+  * {
+    cursor: auto !important;
+  }
+  
+  .cursor-dot, .cursor-trail {
+    display: none !important;
+  }
 }
 
 /* Make sure links and buttons still visually indicate they're clickable */

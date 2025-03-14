@@ -555,7 +555,7 @@ const DuelCard: React.FC<DuelCardProps> = ({ duelId, player1, player2, amount, t
         </div>
       </div>
       
-      <div className="mt-4       <div className="mt-4 border-t border-white/10 pt-4 flex justify-between items-center">
+      <div className="mt-4 border-t border-white/10 pt-4 flex justify-between items-center">
         {status === 'completed' ? (
           <div className="text-sm text-white/70">
             Winner: <span className="text-green-500 font-medium">{winner}</span>

@@ -130,9 +130,7 @@ const JackpotSection: React.FC = () => {
           <p className="text-lg md:text-xl text-white/70 mt-4">
             Join our massive daily jackpot event at 8PM EST! Stake your tokens to win the largest pot in the $DUEL ecosystem.
           </p>
-        </div>
-        
-        <div className="jackpot-content">
+        </div>        <div className="jackpot-content">
           <div className="jackpot-card max-w-4xl mx-auto bg-gradient-to-br from-background-light to-background-dark p-8 md:p-12 rounded-3xl border border-white/10 shadow-xl shadow-primary/5 relative overflow-hidden">
             {/* Animated glow */}
             <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent opacity-20 blur-xl animate-pulse-slow"></div>
@@ -179,7 +177,7 @@ const JackpotSection: React.FC = () => {
                       <div className="text-3xl font-bold text-white">{String(timeRemaining.minutes).padStart(2, '0')}</div>
                       <div className="text-xs text-white/50">MINUTES</div>
                     </div>
-                    <div className="text-2xl font-bold text-white/30 flex items-center pb-4                    <div className="text-2xl font-bold text-white/30 flex items-center pb-4">:</div>
+                    <div className="text-2xl font-bold text-white/30 flex items-center pb-4">:</div>
                     <div className="countdown-segment">
                       <div className="text-3xl font-bold text-white">{String(timeRemaining.seconds).padStart(2, '0')}</div>
                       <div className="text-xs text-white/50">SECONDS</div>

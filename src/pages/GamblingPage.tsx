@@ -2,321 +2,367 @@ import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import JackpotSection from '../components/JackpotSection';
 import DuelsSection from '../components/DuelsSection';
-import { Swords, Zap, Sparkles } from 'lucide-react';
+import { Zap, Sparkles } from 'lucide-react';
 import gsap from 'gsap';
 
 const GamblingPage: React.FC = () => {
-  const backgroundRef = useRef<HTMLDivElement>(null);
-  const lightningRef = useRef<HTMLDivElement>(null);
+  const pageRef = useRef<HTMLDivElement>(null);
+  const embersContainerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-
+  
+  // Create and animate the ember particles
   useEffect(() => {
-    // Create dynamic sword animations in the background
-    if (backgroundRef.current) {
-      // Create random swords in the background
-      const swordElements = Array.from({ length: 20 }).map((_, index) => {
-        const swordEl = document.createElement('div');
-        swordEl.classList.add('arena-sword');
-        swordEl.style.setProperty('--index', index.toString());
-        swordEl.style.setProperty('--rotation', `${Math.random() * 360}deg`);
-        swordEl.style.setProperty('--size', `${Math.random() * 60 + 40}px`);
-        swordEl.style.setProperty('--x', `${Math.random() * 100}vw`);
-        swordEl.style.setProperty('--y', `${Math.random() * 100}vh`);
-        swordEl.style.setProperty('--delay', `${Math.random() * 10}s`);
-        swordEl.style.setProperty('--duration', `${Math.random() * 10 + 15}s`);
-        
-        const swordIcon = document.createElement('div');
-        swordIcon.classList.add('sword-icon');
-        swordEl.appendChild(swordIcon);
-        
-        return swordEl;
+    if (!embersContainerRef.current) return;
+    
+    // Create ember particles
+    const createEmbers = () => {
+      const emberCount = window.innerWidth < 768 ? 50 : 100;
+      
+      // Clear any existing embers
+      while (embersContainerRef.current?.firstChild) {
+        embersContainerRef.current.removeChild(embersContainerRef.current.firstChild);
+      }
+      
+      // Create new ember elements
+      for (let i = 0; i < emberCount; i++) {
+        createEmber();
+      }
+    };
+    
+    const createEmber = () => {
+      if (!embersContainerRef.current) return;
+      
+      // Create ember element
+      const ember = document.createElement('div');
+      ember.classList.add('ember');
+      
+      // Random properties
+      const size = Math.random() * 6 + 2; // 2-8px
+      const posX = Math.random() * 100; // 0-100%
+      const delay = Math.random() * 10; // 0-10s
+      const duration = Math.random() * 10 + 15; // 15-25s
+      const type = Math.random() > 0.7 ? 'accent' : 'primary'; // 70% primary, 30% accent
+      
+      // Apply styles
+      ember.style.width = `${size}px`;
+      ember.style.height = `${size}px`;
+      ember.style.left = `${posX}%`;
+      ember.style.bottom = '-20px';
+      ember.style.opacity = `${Math.random() * 0.5 + 0.1}`; // 0.1-0.6
+      ember.style.animationDelay = `${delay}s`;
+      ember.style.animationDuration = `${duration}s`;
+      
+      // Add color class
+      ember.classList.add(type === 'accent' ? 'ember-accent' : 'ember-primary');
+      
+      // Add to container
+      embersContainerRef.current.appendChild(ember);
+      
+      // Remove after animation completes
+      setTimeout(() => {
+        ember && ember.parentNode && ember.parentNode.removeChild(ember);
+        // Create a new ember to replace this one
+        createEmber();
+      }, (delay + duration) * 1000);
+    };
+    
+    // Initial creation
+    createEmbers();
+    
+    // Handle window resize
+    const handleResize = () => {
+      createEmbers();
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Title animation
+    if (titleRef.current) {
+      gsap.from(titleRef.current, {
+        y: 30,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power3.out"
       });
       
-      swordElements.forEach(el => backgroundRef.current?.appendChild(el));
-    }
-    
-    // Lightning animation effect
-    if (lightningRef.current) {
-      const createLightning = () => {
-        // Random interval to add randomness to the effect
-        const interval = Math.random() * 5000 + 2000;
-        
-        const flash = () => {
-          if (!lightningRef.current) return;
-          
-          // Create flash effect
-          gsap.to(lightningRef.current, {
-            opacity: 0.2,
-            duration: 0.05,
-            onComplete: () => {
-              // Second flash
-              gsap.to(lightningRef.current, {
-                opacity: 0,
-                duration: 0.05,
-                delay: 0.1,
-                onComplete: () => {
-                  // Third flash
-                  gsap.to(lightningRef.current, {
-                    opacity: 0.3,
-                    duration: 0.05,
-                    delay: 0.2,
-                    onComplete: () => {
-                      gsap.to(lightningRef.current, {
-                        opacity: 0,
-                        duration: 0.3,
-                      });
-                    }
-                  });
-                }
-              });
-            }
-          });
-        };
-        
-        flash();
-        
-        // Schedule next lightning
-        setTimeout(createLightning, interval);
-      };
-      
-      // Start the lightning effect with initial delay
-      setTimeout(createLightning, 2000);
-    }
-    
-    // Title animation effect
-    if (titleRef.current) {
-      // Set up glowing border animation
-      gsap.to(".title-border", {
-        boxShadow: "0 0 20px rgba(138, 43, 226, 0.8), 0 0 40px rgba(255, 105, 180, 0.3)",
+      // Continuous glow animation
+      gsap.to(titleRef.current.querySelector('.title-glow'), {
+        opacity: 0.6,
         duration: 1.5,
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut"
       });
-      
-      // Shine effect animation
-      const createShineEffect = () => {
-        const shine = document.createElement('div');
-        shine.classList.add('title-shine');
-        titleRef.current?.appendChild(shine);
-        
-        gsap.to(shine, {
-          left: "100%",
-          duration: 1.5,
-          ease: "power2.inOut",
-          onComplete: () => {
-            shine.remove();
-            // Random delay before next shine
-            setTimeout(createShineEffect, Math.random() * 3000 + 2000);
-          }
-        });
-      };
-      
-      // Start shine effect with initial delay
-      setTimeout(createShineEffect, 1000);
     }
     
     return () => {
-      // Clean up animations if needed
-      if (backgroundRef.current) {
-        const swords = backgroundRef.current.querySelectorAll('.arena-sword');
-        swords.forEach(sword => sword.remove());
-      }
-      
-      // Kill all GSAP animations to prevent memory leaks
-      gsap.killTweensOf(".title-border");
-      gsap.killTweensOf(".title-shine");
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
   
   return (
     <motion.div
+      ref={pageRef}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative"
+      className="relative min-h-screen overflow-hidden"
     >
-      {/* Fixed z-index layering - ensure background is behind everything */}
-      <div ref={backgroundRef} className="arena-background fixed inset-0 overflow-hidden z-0 pointer-events-none">
-        {/* Background layers will be added by JavaScript */}
-        {/* Base layer with animated gradients - reduced opacity of pink orb */}
-        <div className="fixed inset-0 bg-background-dark z-0">
-          {/* Animated gradient orbs */}
-          <div className="orb orb-1"></div>
-          <div className="orb orb-2"></div>
-          <div className="orb orb-3"></div>
-        </div>
+      {/* Modern, sleek background with animated gradients */}
+      <div className="fixed inset-0 bg-background-dark overflow-hidden z-0">
+        {/* Base gradient layer */}
+        <div className="absolute inset-0 bg-gradient-radial from-background-dark to-background-dark/90 z-0"></div>
         
-        {/* Lightning effect layer */}
+        {/* Subtle animated gradient orbs */}
+        <div className="absolute -left-1/4 -top-1/4 w-1/2 h-1/2 rounded-full bg-gradient-radial from-primary/10 to-transparent blur-3xl animate-float-slow"></div>
+        <div className="absolute -right-1/4 -bottom-1/4 w-1/2 h-1/2 rounded-full bg-gradient-radial from-accent/10 to-transparent blur-3xl animate-float-slow-reverse"></div>
+        <div className="absolute left-1/2 top-1/4 w-1/3 h-1/3 rounded-full bg-gradient-radial from-yellow-500/5 to-transparent blur-3xl animate-float-slow-alt"></div>
+        
+        {/* Animated ember particles container */}
         <div 
-          ref={lightningRef} 
-          className="lightning-effect fixed inset-0 bg-primary/20 mix-blend-color-dodge pointer-events-none opacity-0 z-0"
-        >
-          <Zap className="absolute text-white h-40 w-40 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-        </div>
+          ref={embersContainerRef} 
+          className="embers-container absolute inset-0 z-10 pointer-events-none overflow-hidden"
+        ></div>
+        
+        {/* Subtle noise texture overlay */}
+        <div className="absolute inset-0 bg-noise opacity-[0.03] z-20"></div>
       </div>
       
-      <div className="pt-20 relative z-10">
-        {/* Page title */}
-        <div className="bg-background-dark/80 backdrop-blur-md py-16 md:py-24 relative overflow-hidden">
-          {/* Decorative swords around title */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Swords className="w-60 h-60 text-primary/5 animate-slow-spin absolute transform -translate-y-1/2 -translate-x-1/2 blur-sm" />
-            <Swords className="w-40 h-40 text-accent/5 animate-slow-spin-reverse absolute transform translate-y-1/3 translate-x-1/3 blur-sm" />
-          </div>
-          
-          <div className="container mx-auto px-4 text-center relative z-10">
-            <div className="mb-4 inline-block relative">
-              {/* Enhanced title animation container */}
-              <div className="title-container relative inline-block">
-                {/* Glowing particles */}
-                <div className="absolute inset-0 particles-container">
-                  {[...Array(10)].map((_, i) => (
-                    <div key={i} className="particle"></div>
-                  ))}
-                </div>
-                
-                {/* Glowing borders */}
-                <div className="title-border absolute -inset-3 rounded-3xl opacity-75"></div>
-                
-                {/* Main title with enhanced 3D effects */}
-                <h1 ref={titleRef} className="text-5xl md:text-7xl font-bold mb-6 relative z-20 metal-text p-6">
-                  <span className="relative inline-block">
-                    <span className="text-transparent bg-clip-text bg-gradient-to-br from-purple-400 via-primary to-accent relative z-10 title-gradient-text">$DUEL</span>
-                    <span className="absolute inset-0 text-transparent bg-clip-text bg-white/10 blur-[2px] transform translate-y-[2px] translate-x-[2px] z-0">$DUEL</span>
-                  </span>{" "}
-                  <span className="relative inline-block animate-pulse-text">
-                    <Sparkles className="absolute -left-6 -top-2 w-5 h-5 text-yellow-400 animate-twinkle" />
-                    <span>Arena</span>
-                    <Sparkles className="absolute -right-6 -top-2 w-5 h-5 text-yellow-400 animate-twinkle-delay" />
+      {/* Main content */}
+      <div className="relative z-10 pt-16">
+        {/* Elegant, modern hero section */}
+        <section className="py-24 md:py-32 relative overflow-hidden">
+          <div className="container mx-auto px-4">
+            {/* Main title with modern design and subtle animation */}
+            <div className="max-w-4xl mx-auto text-center mb-20">
+              <div className="inline-block relative">
+                <h1 
+                  ref={titleRef} 
+                  className="text-6xl md:text-7xl font-bold relative z-10"
+                >
+                  <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/80">The</span>
+                  {" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent relative">
+                    $DUEL Arena
+                    <Sparkles className="absolute -top-6 -right-8 w-6 h-6 text-accent animate-twinkle" />
                   </span>
+                  
+                  {/* Subtle glow effect */}
+                  <div className="title-glow absolute -inset-10 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 rounded-full blur-2xl opacity-40 z-0"></div>
                 </h1>
               </div>
+              
+              <p className="text-xl text-white/70 mt-6 max-w-2xl mx-auto">
+                Welcome to the ultimate battleground. Stake your tokens, challenge opponents, 
+                and compete for massive rewards.
+              </p>
             </div>
-            <p className="text-xl text-white/70 max-w-2xl mx-auto">
-              Stake your tokens, challenge opponents, and win big in our jackpot events
-              and one-on-one duels.
-            </p>
+            
+            {/* Sleek feature cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+              {/* Daily Jackpot Card */}
+              <motion.div 
+                className="feature-card rounded-2xl overflow-hidden relative group"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.7 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/5 group-hover:opacity-90 transition-opacity duration-500 z-0"></div>
+                <div className="relative z-10 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden h-full">
+                  {/* Card Header */}
+                  <div className="p-8 relative overflow-hidden">
+                    {/* Decorative elements */}
+                    <div className="absolute -right-16 -bottom-16 w-32 h-32 rounded-full bg-gradient-to-r from-primary/20 to-accent/20 blur-2xl"></div>
+                    
+                    <div className="flex items-center mb-4">
+                      <div className="mr-4 rounded-full bg-primary/10 p-3">
+                        <Zap className="w-6 h-6 text-primary" />
+                      </div>
+                      <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Daily Jackpot</h2>
+                    </div>
+                    
+                    <p className="text-white/70 mb-8">
+                      Enter the daily 8PM EST jackpot draw with your $DUEL tokens. The more you stake, the higher your chances to win big.
+                    </p>
+                    
+                    <motion.button 
+                      className="btn-primary py-3 px-8 w-full relative overflow-hidden"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => document.getElementById('jackpot')?.scrollIntoView({ behavior: 'smooth' })}
+                    >
+                      <span className="relative z-10">Enter Today's Jackpot</span>
+                    </motion.button>
+                  </div>
+                  
+                  {/* Stat Bar */}
+                  <div className="bg-black/30 backdrop-blur-md px-8 py-4 border-t border-white/10">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="text-white/60 text-sm">Current Pot</p>
+                        <p className="text-white font-bold text-xl">98,712 $DUEL</p>
+                      </div>
+                      <div>
+                        <p className="text-white/60 text-sm">Next Draw</p>
+                        <p className="text-white font-bold">8:00 PM EST</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              
+              {/* 1v1 Duels Card */}
+              <motion.div 
+                className="feature-card rounded-2xl overflow-hidden relative group"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.7 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-primary/5 group-hover:opacity-90 transition-opacity duration-500 z-0"></div>
+                <div className="relative z-10 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden h-full">
+                  {/* Card Header */}
+                  <div className="p-8 relative overflow-hidden">
+                    {/* Decorative elements */}
+                    <div className="absolute -right-16 -bottom-16 w-32 h-32 rounded-full bg-gradient-to-r from-accent/20 to-primary/20 blur-2xl"></div>
+                    
+                    <div className="flex items-center mb-4">
+                      <div className="mr-4 rounded-full bg-accent/10 p-3">
+                        <svg className="w-6 h-6 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M14.5 17.5L3 6V3h3l11.5 11.5"></path>
+                          <path d="M13 19l6-6"></path>
+                          <path d="M16 16l4 4"></path>
+                          <path d="M19 21l2-2"></path>
+                        </svg>
+                      </div>
+                      <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary">1v1 Duels</h2>
+                    </div>
+                    
+                    <p className="text-white/70 mb-8">
+                      Challenge opponents to one-on-one battles. Stake your tokens, prove your skill, and claim your rival's stake.
+                    </p>
+                    
+                    <motion.button 
+                      className="btn-primary py-3 px-8 w-full relative overflow-hidden"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => document.getElementById('duels')?.scrollIntoView({ behavior: 'smooth' })}
+                    >
+                      <span className="relative z-10">Find a Duel</span>
+                    </motion.button>
+                  </div>
+                  
+                  {/* Stat Bar */}
+                  <div className="bg-black/30 backdrop-blur-md px-8 py-4 border-t border-white/10">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="text-white/60 text-sm">Active Duels</p>
+                        <p className="text-white font-bold text-xl">24</p>
+                      </div>
+                      <div>
+                        <p className="text-white/60 text-sm">Total Staked</p>
+                        <p className="text-white font-bold">45,600 $DUEL</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
           </div>
-        </div>
+        </section>
         
+        {/* Content sections */}
         <JackpotSection />
         <DuelsSection />
       </div>
       
-      {/* Add this style to create the animations */}
+      {/* Styles for the ember animations and other effects */}
       <style jsx>{`
-        @keyframes float-sword {
-          0%, 100% {
-            transform: translateY(0) rotate(var(--rotation));
-          }
-          50% {
-            transform: translateY(-20px) rotate(calc(var(--rotation) + 10deg));
-          }
-        }
-        
-        @keyframes orb-animation-1 {
-          0%, 100% {
-            transform: translate(-30%, -30%) scale(1);
-            opacity: 0.3;
-          }
-          50% {
-            transform: translate(-35%, -40%) scale(1.2);
-            opacity: 0.5;
-          }
-        }
-        
-        @keyframes orb-animation-2 {
-          0%, 100% {
-            transform: translate(30%, 20%) scale(1);
-            opacity: 0.2; /* Reduced opacity to fix flashing */
-          }
-          50% {
-            transform: translate(35%, 25%) scale(1.2);
-            opacity: 0.3; /* Reduced opacity to fix flashing */
-          }
-        }
-        
-        @keyframes orb-animation-3 {
-          0%, 100% {
-            transform: translate(10%, -40%) scale(0.8);
-            opacity: 0.2;
-          }
-          50% {
-            transform: translate(15%, -35%) scale(1);
-            opacity: 0.3;
-          }
-        }
-        
-        @keyframes slow-spin {
+        /* Ember animations */
+        @keyframes float-ember {
           0% {
-            transform: rotate(0deg);
+            transform: translateY(0) rotate(0deg);
+            opacity: var(--initial-opacity, 0.3);
           }
-          100% {
-            transform: rotate(360deg);
+          20% {
+            opacity: var(--initial-opacity, 0.3);
           }
-        }
-        
-        @keyframes slow-spin-reverse {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(-360deg);
-          }
-        }
-        
-        @keyframes pulse-text {
-          0%, 100% {
-            text-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
-          }
-          50% {
-            text-shadow: 0 0 30px rgba(138, 43, 226, 0.8), 0 0 50px rgba(138, 43, 226, 0.4);
-          }
-        }
-        
-        @keyframes shine {
-          0% {
-            left: -100%;
-            opacity: 0;
-          }
-          10% {
-            opacity: 0.5;
-          }
-          50% {
-            opacity: 0.8;
-          }
-          90% {
-            opacity: 0.5;
-          }
-          100% {
-            left: 100%;
+          90%, 100% {
+            transform: translateY(-100vh) rotate(var(--rotation, 720deg));
             opacity: 0;
           }
         }
         
-        @keyframes float-particle {
+        .ember {
+          position: absolute;
+          border-radius: 50%;
+          pointer-events: none;
+          animation: float-ember var(--duration, 20s) ease-out forwards;
+          animation-delay: var(--delay, 0s);
+          filter: blur(1px);
+          --initial-opacity: 0.3;
+          --rotation: 720deg;
+        }
+        
+        .ember-primary {
+          background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+          box-shadow: 0 0 10px 2px rgba(138, 43, 226, 0.3);
+        }
+        
+        .ember-accent {
+          background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+          box-shadow: 0 0 10px 2px rgba(255, 105, 180, 0.3);
+        }
+        
+        /* Floating animations for background elements */
+        @keyframes float-slow {
           0%, 100% {
-            transform: translateY(0px) translateX(0px);
+            transform: translate(0, 0);
           }
           50% {
-            transform: translateY(-15px) translateX(5px);
+            transform: translate(-5%, -5%);
           }
         }
         
+        @keyframes float-slow-reverse {
+          0%, 100% {
+            transform: translate(0, 0);
+          }
+          50% {
+            transform: translate(5%, 5%);
+          }
+        }
+        
+        @keyframes float-slow-alt {
+          0%, 100% {
+            transform: translate(0, 0);
+          }
+          50% {
+            transform: translate(5%, -5%);
+          }
+        }
+        
+        .animate-float-slow {
+          animation: float-slow 15s ease-in-out infinite;
+        }
+        
+        .animate-float-slow-reverse {
+          animation: float-slow-reverse 20s ease-in-out infinite;
+        }
+        
+        .animate-float-slow-alt {
+          animation: float-slow-alt 17s ease-in-out infinite;
+        }
+        
+        /* Noise texture */
+        .bg-noise {
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+          background-repeat: repeat;
+          background-size: 200px 200px;
+        }
+        
+        /* Twinkle animation for sparkles */
         @keyframes twinkle {
-          0%, 100% {
-            opacity: 0.3;
-            transform: scale(0.8);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1.2);
-          }
-        }
-        
-        @keyframes twinkle-delay {
           0%, 100% {
             opacity: 0.3;
             transform: scale(0.8);
@@ -330,158 +376,6 @@ const GamblingPage: React.FC = () => {
         .animate-twinkle {
           animation: twinkle 2s ease-in-out infinite;
         }
-        
-        .animate-twinkle-delay {
-          animation: twinkle-delay 2s ease-in-out infinite 1s;
-        }
-        
-        .title-gradient-text {
-          background-size: 200% 200%;
-          animation: gradientShift 8s ease infinite;
-        }
-        
-        .animate-pulse-text {
-          animation: pulse-text 3s ease infinite;
-        }
-        
-        .animate-slow-spin {
-          animation: slow-spin 40s linear infinite;
-        }
-        
-        .animate-slow-spin-reverse {
-          animation: slow-spin-reverse 30s linear infinite;
-        }
-        
-        .arena-sword {
-          position: absolute;
-          left: var(--x);
-          top: var(--y);
-          width: var(--size);
-          height: var(--size);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          animation: float-sword var(--duration) ease-in-out infinite;
-          animation-delay: var(--delay);
-          opacity: 0.1;
-          pointer-events: none;
-        }
-        
-        .sword-icon {
-          width: 100%;
-          height: 100%;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.5 17.5L3 6V3h3l11.5 11.5'/%3E%3Cpath d='M13 19l6-6'/%3E%3Cpath d='M16 16l4 4'/%3E%3Cpath d='M19 21l2-2'/%3E%3C/svg%3E");
-          background-repeat: no-repeat;
-          background-size: contain;
-          transform: rotate(var(--rotation));
-        }
-        
-        .orb {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(80px);
-          pointer-events: none;
-        }
-        
-        .orb-1 {
-          width: 500px;
-          height: 500px;
-          background: radial-gradient(circle, rgba(138, 43, 226, 0.3) 0%, rgba(138, 43, 226, 0.1) 70%, transparent 100%);
-          top: 40%;
-          left: 30%;
-          animation: orb-animation-1 15s ease-in-out infinite;
-        }
-        
-        .orb-2 {
-          width: 400px;
-          height: 400px;
-          background: radial-gradient(circle, rgba(255, 105, 180, 0.2) 0%, rgba(255, 105, 180, 0.05) 70%, transparent 100%);
-          top: 60%;
-          right: 30%;
-          animation: orb-animation-2 20s ease-in-out infinite;
-          z-index: 0; /* Ensure it stays behind other elements */
-        }
-        
-        .orb-3 {
-          width: 300px;
-          height: 300px;
-          background: radial-gradient(circle, rgba(255, 223, 0, 0.2) 0%, rgba(255, 223, 0, 0.05) 70%, transparent 100%);
-          bottom: 20%;
-          left: 50%;
-          animation: orb-animation-3 25s ease-in-out infinite;
-        }
-        
-        @keyframes gradientShift {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-        
-        /* Enhanced title effects */
-        .metal-text {
-          text-shadow: 
-            0 1px 0 rgba(255,255,255,0.4),
-            0 2px 0 rgba(255,255,255,0.3),
-            0 3px 0 rgba(255,255,255,0.2),
-            0 4px 0 rgba(255,255,255,0.1),
-            0 5px 8px rgba(0,0,0,0.8);
-        }
-        
-        .title-border {
-          border: 2px solid transparent;
-          border-image: linear-gradient(45deg, #8a2be2, #ff69b4, #8a2be2) 1;
-          border-radius: 16px;
-        }
-        
-        .title-shine {
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 50%;
-          height: 100%;
-          background: linear-gradient(
-            90deg, 
-            transparent, 
-            rgba(255, 255, 255, 0.2), 
-            transparent
-          );
-          transform: skewX(-20deg);
-          pointer-events: none;
-          z-index: 15;
-        }
-        
-        .particles-container {
-          overflow: hidden;
-          pointer-events: none;
-        }
-        
-        .particle {
-          position: absolute;
-          width: 6px;
-          height: 6px;
-          background: radial-gradient(circle, #8a2be2, transparent);
-          border-radius: 50%;
-          opacity: 0.6;
-          pointer-events: none;
-          animation: float-particle 3s ease-in-out infinite;
-        }
-        
-        .particle:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-        .particle:nth-child(2) { top: 20%; left: 80%; animation-delay: 0.5s; }
-        .particle:nth-child(3) { top: 80%; left: 20%; animation-delay: 1s; }
-        .particle:nth-child(4) { top: 70%; left: 70%; animation-delay: 1.5s; }
-        .particle:nth-child(5) { top: 30%; left: 30%; animation-delay: 2s; }
-        .particle:nth-child(6) { top: 60%; left: 10%; animation-delay: 2.5s; }
-        .particle:nth-child(7) { top: 40%; left: 60%; animation-delay: 3s; }
-        .particle:nth-child(8) { top: 90%; left: 40%; animation-delay: 3.5s; }
-        .particle:nth-child(9) { top: 5%; left: 95%; animation-delay: 4s; }
-        .particle:nth-child(10) { top: 50%; left: 50%; animation-delay: 4.5s; }
       `}</style>
     </motion.div>
   );

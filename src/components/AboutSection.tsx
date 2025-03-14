@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sword, Shield, Flame, Trophy, ArrowRight, ZapIcon, Sparkles, Repeat, Gem } from 'lucide-react';
+import { Sword, Shield, Flame, Trophy, ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -114,35 +114,11 @@ const AboutSection: React.FC = () => {
           />
         </div>
 
-        {/* Statistics Section */}
-        <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <StatCard 
-            icon={<Sparkles className="w-6 h-6" />}
-            value="42k+"
-            label="Active Duelists"
-          />
-          <StatCard 
-            icon={<Sword className="w-6 h-6" />}
-            value="12M+"
-            label="$DUEL Wagered"
-          />
-          <StatCard 
-            icon={<Repeat className="w-6 h-6" />}
-            value="780k+"
-            label="Duels Completed"
-          />
-          <StatCard 
-            icon={<Gem className="w-6 h-6" />}
-            value="$1.2M"
-            label="Largest Jackpot"
-          />
-        </div>
-
         {/* CTA Button */}
         <div className="mt-16 text-center">
           <button 
             className="btn-gradient-shine text-lg px-8 py-3 group font-bold"
-            onClick={() => navigate('/duels')}
+            onClick={() => navigate('/arena')}
           >
             Enter The Arena
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -177,26 +153,6 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, del
         <h3 className="text-xl font-bold mb-3">{title}</h3>
         <p className="text-white/70">{description}</p>
       </div>
-    </div>
-  );
-};
-
-interface StatCardProps {
-  icon: React.ReactNode;
-  value: string;
-  label: string;
-}
-
-const StatCard: React.FC<StatCardProps> = ({ icon, value, label }) => {
-  return (
-    <div className="feature-card p-4 rounded-xl border border-white/5 bg-background/50 hover:bg-background/80 hover:border-white/10 transition-all duration-300">
-      <div className="flex items-center justify-center mb-2">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary/20 to-accent/20 flex items-center justify-center">
-          {icon}
-        </div>
-      </div>
-      <div className="font-bold text-2xl md:text-3xl gradient-text">{value}</div>
-      <div className="text-sm text-white/60">{label}</div>
     </div>
   );
 };

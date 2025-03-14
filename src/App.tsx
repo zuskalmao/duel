@@ -125,12 +125,12 @@ function App() {
       {/* Fixed Header */}
       <Header />
       
-      {/* Main Content with padding for fixed header */}
+      {/* Main Content with padding for fixed header      {/* Main Content with padding for fixed header */}
       <div className="pt-32">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<HomePage />} />
-            <Route path="/duels" element={<GamblingPage />} />
+            <Route path="/arena" element={<GamblingPage />} />
           </Routes>
         </AnimatePresence>
       </div>

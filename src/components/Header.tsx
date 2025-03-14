@@ -96,9 +96,9 @@ const Header: React.FC = () => {
               </a>
               <div 
                 className={`cursor-pointer text-white/80 hover:text-primary transition-colors text-base font-medium ${
-                  location.pathname === '/duels' ? 'text-primary' : ''
+                  location.pathname === '/arena' ? 'text-primary' : ''
                 }`}
-                onClick={() => navigate('/duels')}
+                onClick={() => navigate('/arena')}
               >
                 Arena
               </div>
@@ -152,7 +152,7 @@ const Header: React.FC = () => {
             </div>
             
             <button 
-              onClick={() => navigate('/duels')}
+              onClick={() => navigate('/arena')}
               className="btn-shine flex items-center group"
             >
               Join Now
@@ -175,9 +175,9 @@ const Header: React.FC = () => {
           </a>
           <div 
             className={`cursor-pointer text-white/80 hover:text-primary transition-colors py-2 ${
-              location.pathname === '/duels' ? 'text-primary' : ''
+              location.pathname === '/arena' ? 'text-primary' : ''
             }`}
-            onClick={() => navigate('/duels')}
+            onClick={() => navigate('/arena')}
           >
             Arena
           </div>

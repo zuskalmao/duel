@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { Swords, User, Award, ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -11,6 +11,34 @@ const DuelsSection: React.FC = () => {
   const tabsRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [selectedTab, setSelectedTab] = useState('active');
+  
+  // Generate stable background sword elements
+  const backgroundSwords = useMemo(() => {
+    return Array.from({ length: 6 }, (_, i) => ({
+      id: i,
+      width: `${Math.random() * 10 + 5}rem`,
+      height: `${Math.random() * 10 + 5}rem`,
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      rotation: `rotate(${Math.random() * 360}deg)`,
+      animationDelay: `${Math.random() * 5}s`
+    }));
+  }, []);
+
+  // Generate stable duel IDs
+  const duelIds = useMemo(() => {
+    return {
+      duel1: Math.floor(1000 + Math.random() * 9000),
+      duel2: Math.floor(1000 + Math.random() * 9000),
+      duel3: Math.floor(1000 + Math.random() * 9000),
+      duel4: Math.floor(1000 + Math.random() * 9000),
+      duel5: Math.floor(1000 + Math.random() * 9000),
+      duel6: Math.floor(1000 + Math.random() * 9000),
+      duel7: Math.floor(1000 + Math.random() * 9000),
+      duel8: Math.floor(1000 + Math.random() * 9000),
+      duel9: Math.floor(1000 + Math.random() * 9000)
+    };
+  }, []);
   
   // Initialize animations once when component mounts
   useEffect(() => {
@@ -76,19 +104,19 @@ const DuelsSection: React.FC = () => {
       {/* Gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background to-background-light z-0"></div>
       
-      {/* Animated swords background */}
+      {/* Animated swords background - Now using memoized stable elements */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(6)].map((_, i) => (
+        {backgroundSwords.map((sword) => (
           <Swords 
-            key={i}
+            key={sword.id}
             className="absolute text-white/5 animate-pulse-slow"
             style={{
-              width: `${Math.random() * 10 + 5}rem`,
-              height: `${Math.random() * 10 + 5}rem`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              transform: `rotate(${Math.random() * 360}deg)`,
-              animationDelay: `${Math.random() * 5}s`
+              width: sword.width,
+              height: sword.height,
+              top: sword.top,
+              left: sword.left,
+              transform: sword.rotation,
+              animationDelay: sword.animationDelay
             }}
           />
         ))}
@@ -151,6 +179,7 @@ const DuelsSection: React.FC = () => {
           {selectedTab === 'active' && (
             <>
               <DuelCard 
+                duelId={duelIds.duel1}
                 player1="CryptoKing"
                 player2="WaitingForOpponent"
                 amount={500}
@@ -158,6 +187,7 @@ const DuelsSection: React.FC = () => {
                 status="open"
               />
               <DuelCard 
+                duelId={duelIds.duel2}
                 player1="SolWarrior"
                 player2="MoonShot"
                 amount={1200}
@@ -165,6 +195,7 @@ const DuelsSection: React.FC = () => {
                 status="active"
               />
               <DuelCard 
+                duelId={duelIds.duel3}
                 player1="DiamondHands"
                 player2="WaitingForOpponent"
                 amount={800}
@@ -172,6 +203,7 @@ const DuelsSection: React.FC = () => {
                 status="open"
               />
               <DuelCard 
+                duelId={duelIds.duel4}
                 player1="TradeMaster"
                 player2="TokenWhale"
                 amount={2500}
@@ -179,6 +211,7 @@ const DuelsSection: React.FC = () => {
                 status="active"
               />
               <DuelCard 
+                duelId={duelIds.duel5}
                 player1="SolanaFan"
                 player2="WaitingForOpponent"
                 amount={350}
@@ -186,6 +219,7 @@ const DuelsSection: React.FC = () => {
                 status="open"
               />
               <DuelCard 
+                duelId={duelIds.duel6}
                 player1="BlockchainBaron"
                 player2="CryptoNinja"
                 amount={1800}
@@ -198,6 +232,7 @@ const DuelsSection: React.FC = () => {
           {selectedTab === 'completed' && (
             <>
               <DuelCard 
+                duelId={duelIds.duel7}
                 player1="SolWarrior"
                 player2="MoonShot"
                 amount={1200}
@@ -205,6 +240,7 @@ const DuelsSection: React.FC = () => {
                 status="completed"
               />
               <DuelCard 
+                duelId={duelIds.duel8}
                 player1="DiamondHands"
                 player2="TokenWhale"
                 amount={3600}
@@ -212,6 +248,7 @@ const DuelsSection: React.FC = () => {
                 status="completed"
               />
               <DuelCard 
+                duelId={duelIds.duel9}
                 player1="CryptoKing"
                 player2="BlockchainBaron"
                 amount={950}
@@ -243,6 +280,7 @@ const DuelsSection: React.FC = () => {
 };
 
 interface DuelCardProps {
+  duelId: number;  // Now passing specific IDs instead of generating random ones
   player1: string;
   player2: string;
   amount: number;
@@ -251,7 +289,7 @@ interface DuelCardProps {
   status: 'open' | 'active' | 'completed';
 }
 
-const DuelCard: React.FC<DuelCardProps> = ({ player1, player2, amount, timeRemaining, winner, status }) => {
+const DuelCard: React.FC<DuelCardProps> = ({ duelId, player1, player2, amount, timeRemaining, winner, status }) => {
   return (
     <div className="duel-card bg-background-dark border border-white/10 rounded-2xl p-6 card-hover overflow-hidden transition-all duration-300 relative">
       <div className={`absolute -top-1 -right-1 -left-1 h-1 rounded-t-2xl ${
@@ -263,7 +301,7 @@ const DuelCard: React.FC<DuelCardProps> = ({ player1, player2, amount, timeRemai
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
           <Swords className="w-5 h-5 text-primary mr-2" />
-          <span className="font-bold">Duel #{Math.floor(Math.random() * 10000)}</span>
+          <span className="font-bold">Duel #{duelId}</span>
         </div>
         <div className={`px-3 py-1 rounded-full text-xs ${
           status === 'active' ? 'bg-accent/20 text-accent' : 

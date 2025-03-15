@@ -202,7 +202,6 @@ const DuelsSection: React.FC = () => {
               className={`px-6 py-2 rounded-full transition-all ${
                 selectedTab === 'active' 
                   ? 'bg-primary text-white' 
-                  : 'text                  ? 'bg-primary text-white' 
                   : 'text-white/70 hover:text-white'
               }`}
               onClick={() => setSelectedTab('active')}

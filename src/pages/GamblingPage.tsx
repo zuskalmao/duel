@@ -160,7 +160,7 @@ const GamblingPage: React.FC = () => {
               
               <p className="text-xl text-white/70 mt-6 max-w-2xl mx-auto">
                 Welcome to the ultimate battleground. Stake your tokens, challenge opponents, 
-                and compete for massive rewards.
+                and compete for massive                and compete for massive rewards.
               </p>
             </div>
             

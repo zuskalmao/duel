@@ -95,7 +95,7 @@ const DuelsSection: React.FC = () => {
           }
         });
         
-        // Animate duel cards with subtle effects
+        // Simple fade-in animation for duel cards with no hover effects
         gsap.to(".duel-card", {
           opacity: 1,
           y: 0,
@@ -107,34 +107,7 @@ const DuelsSection: React.FC = () => {
             toggleActions: "play none none none"
           },
           onComplete: () => {
-            // Add subtle continuous animations to cards after they appear
-            gsap.to(".duel-card", {
-              boxShadow: "0 8px 32px rgba(138, 43, 226, 0.15)",
-              duration: 2,
-              repeat: -1,
-              yoyo: true,
-              stagger: {
-                each: 0.5,
-                grid: "auto",
-                from: "center"
-              }
-            });
-            
-            // Very subtle scale animation for cards
-            gsap.to(".duel-card", {
-              scale: 1.01,
-              duration: 3,
-              repeat: -1,
-              yoyo: true,
-              stagger: {
-                each: 0.7,
-                grid: "auto",
-                from: "random"
-              },
-              ease: "sine.inOut"
-            });
-            
-            // Status indicator pulse
+            // Only keep the status indicator pulse animation
             gsap.to(".status-indicator", {
               opacity: 0.7,
               duration: 1.5,
@@ -160,32 +133,25 @@ const DuelsSection: React.FC = () => {
   
   return (
     <section id="duels" ref={sectionRef} className="py-20 md:py-32 relative overflow-hidden">
-      {/* Removed dark tint overlay */}
-      
       <div className="container mx-auto px-4 relative z-10">
         <div 
           ref={titleRef} 
           className="text-center max-w-4xl mx-auto mb-16"
           style={{ opacity: 0, transform: 'translateY(30px)' }}
         >
-          {/* Simplified, more subtle title - no sparkles or underline */}
           <h2 
             ref={titleTextRef}
             className="text-5xl md:text-6xl font-bold mb-4 relative"
           >
             <span className="title-1v1 relative inline-block mr-2">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80 relative z-10">1v1</span>
-              {/* Subtle glow effect for 1v1 */}
               <div className="title-glow-effect absolute -inset-3 bg-primary/20 rounded-full blur-xl opacity-30 z-0"></div>
             </span>
             <span className="title-duels relative inline-block">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent/80 relative z-10">DUELS</span>
-              {/* Subtle glow effect for DUELS - no sparkles */}
               <div className="title-glow-effect absolute -inset-3 bg-accent/20 rounded-full blur-xl opacity-30 z-0"></div>
             </span>
           </h2>
-          
-          {/* Removed animated underline */}
           
           <p className="text-white/70 text-lg max-w-2xl mx-auto">
             Challenge other $DUEL holders to epic one-on-one battles. Stake your tokens and fight for glory and rewards!
@@ -346,81 +312,12 @@ interface DuelCardProps {
 }
 
 const DuelCard: React.FC<DuelCardProps> = ({ duelId, player1, player2, amount, timeRemaining, winner, status }) => {
-  // Added ref to help with individual card animations
-  const cardRef = useRef<HTMLDivElement>(null);
-  
-  // Individual card animation on hover
-  useEffect(() => {
-    if (!cardRef.current) return;
-    
-    // Set initial state with perspective for 3D effect
-    gsap.set(cardRef.current, { transformPerspective: 1000 });
-    
-    // Build the card tilt animation function
-    const buildTiltAnimation = (card: HTMLElement) => {
-      let animation: gsap.core.Tween | null = null;
-      
-      // Mouse move handler for tilt effect
-      const handleMouseMove = (e: MouseEvent) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        // Calculate tilt based on mouse position relative to card center
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = (y - centerY) / 30; // Reduced divisor for slightly stronger effect
-        const rotateY = (centerX - x) / 30;
-        
-        // Kill any existing animation
-        if (animation) animation.kill();
-        
-        // Create new tilt animation
-        animation = gsap.to(card, {
-          rotationX: rotateX * 0.8, // Slightly increased for better visibility
-          rotationY: rotateY * 0.8,
-          boxShadow: `${rotateY * -0.7}px ${rotateX * 0.7}px 20px rgba(138, 43, 226, 0.2)`,
-          duration: 0.4,
-          ease: "power2.out"
-        });
-      };
-      
-      // Reset on mouse leave
-      const handleMouseLeave = () => {
-        if (animation) animation.kill();
-        
-        animation = gsap.to(card, {
-          rotationX: 0,
-          rotationY: 0,
-          boxShadow: "0 8px 32px rgba(138, 43, 226, 0.08)",
-          duration: 0.5,
-          ease: "power2.out"
-        });
-      };
-      
-      return { handleMouseMove, handleMouseLeave };
-    };
-    
-    // Apply the animations
-    const card = cardRef.current;
-    const { handleMouseMove, handleMouseLeave } = buildTiltAnimation(card);
-    
-    card.addEventListener("mousemove", handleMouseMove);
-    card.addEventListener("mouseleave", handleMouseLeave);
-    
-    return () => {
-      card.removeEventListener("mousemove", handleMouseMove);
-      card.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, []);
-  
   return (
     <div 
-      ref={cardRef}
-      className="duel-card backdrop-blur-lg bg-white/5 border border-white/10 rounded-2xl p-6 transition-all duration-300 hover:border-white/20 relative overflow-hidden shadow-xl cursor-pointer"
-      style={{ opacity: 0, transform: 'translateY(20px)', willChange: 'transform, box-shadow' }}
+      className="duel-card backdrop-blur-lg bg-white/5 border border-white/10 rounded-2xl p-6 relative overflow-hidden shadow-md"
+      style={{ opacity: 0, transform: 'translateY(20px)' }}
     >
-      {/* Enhanced glass effect with subtle inner glow */}
+      {/* Static glass effect with subtle inner glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-40 z-0"></div>
       
       {/* Status color indicator with animation class */}
@@ -499,14 +396,13 @@ const DuelCard: React.FC<DuelCardProps> = ({ duelId, player1, player2, amount, t
           )}
           
           {status === 'open' && (
-            <button className="btn-primary py-1 px-4 text-sm relative overflow-hidden group">
-              <span className="relative z-10">Join Duel</span>
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-primary via-accent to-primary bg-size-200 transition-opacity duration-300"></div>
+            <button className="btn-primary py-1 px-4 text-sm">
+              Join Duel
             </button>
           )}
           
           {status === 'active' && (
-            <button className="btn-outline py-1 px-4 text-sm group">
+            <button className="btn-outline py-1 px-4 text-sm">
               <Flame className="w-3 h-3 inline mr-1 text-accent" />
               Watch
             </button>

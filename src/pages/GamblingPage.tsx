@@ -10,7 +10,12 @@ const GamblingPage: React.FC = () => {
   const embersContainerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   
-  // Create and animate the ember particles
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
+  // Create and animate the ember particles (only bottom-up embers, no cursor-following)
   useEffect(() => {
     if (!embersContainerRef.current) return;
     
@@ -119,7 +124,7 @@ const GamblingPage: React.FC = () => {
         <div className="absolute -right-1/4 -bottom-1/4 w-1/2 h-1/2 rounded-full bg-gradient-radial from-accent/10 to-transparent blur-3xl animate-float-slow-reverse"></div>
         <div className="absolute left-1/2 top-1/4 w-1/3 h-1/3 rounded-full bg-gradient-radial from-yellow-500/5 to-transparent blur-3xl animate-float-slow-alt"></div>
         
-        {/* Animated ember particles container */}
+        {/* Animated ember particles container - ONLY bottom-up embers */}
         <div 
           ref={embersContainerRef} 
           className="embers-container absolute inset-0 z-10 pointer-events-none overflow-hidden"
@@ -278,7 +283,7 @@ const GamblingPage: React.FC = () => {
       
       {/* Styles for the ember animations and other effects */}
       <style jsx>{`
-        /* Ember animations */
+        /* Ember animations - ONLY bottom-up animations, no cursor following */
         @keyframes float-ember {
           0% {
             transform: translateY(0) rotate(0deg);

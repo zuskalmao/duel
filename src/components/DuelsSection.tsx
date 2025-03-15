@@ -8,23 +8,12 @@ gsap.registerPlugin(ScrollTrigger);
 const DuelsSection: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
+  const titleTextRef = useRef<HTMLHeadingElement>(null);
+  const titleLineRef = useRef<HTMLDivElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [selectedTab, setSelectedTab] = useState('active');
   
-  // Generate stable background sword elements
-  const backgroundSwords = useMemo(() => {
-    return Array.from({ length: 6 }, (_, i) => ({
-      id: i,
-      width: `${Math.random() * 10 + 5}rem`,
-      height: `${Math.random() * 10 + 5}rem`,
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      rotation: `rotate(${Math.random() * 360}deg)`,
-      animationDelay: `${Math.random() * 5}s`
-    }));
-  }, []);
-
   // Generate stable duel IDs
   const duelIds = useMemo(() => {
     return {
@@ -53,6 +42,7 @@ const DuelsSection: React.FC = () => {
       if (titleRef.current && tabsRef.current && contentRef.current) {
         ScrollTrigger.refresh();
         
+        // Main title animation
         gsap.to(titleRef.current, {
           opacity: 1,
           y: 0,
@@ -63,6 +53,56 @@ const DuelsSection: React.FC = () => {
             toggleActions: "play none none none"
           }
         });
+        
+        // Enhanced title text animations
+        if (titleTextRef.current) {
+          // Initial appear animation
+          gsap.from(titleTextRef.current.querySelectorAll('span'), {
+            opacity: 0,
+            y: 20,
+            stagger: 0.1,
+            duration: 0.8,
+            delay: 0.3,
+            ease: "power2.out"
+          });
+          
+          // Continuous subtle float animation
+          gsap.to(titleTextRef.current.querySelector('.title-1v1'), {
+            y: -5,
+            duration: 1.2,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+          });
+          
+          gsap.to(titleTextRef.current.querySelector('.title-duels'), {
+            y: 5,
+            duration: 1.5,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+            delay: 0.2
+          });
+          
+          // Glow animation
+          gsap.to('.title-glow-effect', {
+            opacity: 0.7,
+            duration: 1.8,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+          });
+        }
+        
+        // Animated line
+        if (titleLineRef.current) {
+          gsap.from(titleLineRef.current, {
+            width: 0,
+            duration: 1.2,
+            delay: 0.5,
+            ease: "power3.out"
+          });
+        }
         
         gsap.to(tabsRef.current, {
           opacity: 1,
@@ -101,23 +141,7 @@ const DuelsSection: React.FC = () => {
   
   return (
     <section id="duels" ref={sectionRef} className="py-20 md:py-32 relative overflow-hidden">
-      {/* Light, subtle particles in the background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(8)].map((_, i) => (
-          <Swords 
-            key={i}
-            className="absolute text-white/[0.03] animate-float-slow"
-            style={{
-              width: `${Math.random() * 10 + 5}rem`,
-              height: `${Math.random() * 10 + 5}rem`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              transform: `rotate(${Math.random() * 360}deg)`,
-              animationDelay: `${Math.random() * 5}s`
-            }}
-          />
-        ))}
-      </div>
+      {/* Removed dark tint overlay */}
       
       <div className="container mx-auto px-4 relative z-10">
         <div 
@@ -125,19 +149,29 @@ const DuelsSection: React.FC = () => {
           className="text-center max-w-4xl mx-auto mb-16"
           style={{ opacity: 0, transform: 'translateY(30px)' }}
         >
-          {/* Simplified, cleaner title */}
-          <h2 className="text-4xl md:text-5xl font-bold mb-3">
-            <span className="relative inline-block mr-2">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80">1v1</span>
+          {/* Enhanced, more dynamic title */}
+          <h2 
+            ref={titleTextRef}
+            className="text-5xl md:text-6xl font-bold mb-4 relative"
+          >
+            <span className="title-1v1 relative inline-block mr-2">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80 relative z-10">1v1</span>
+              {/* Glow effect for 1v1 */}
+              <div className="title-glow-effect absolute -inset-3 bg-primary/20 rounded-full blur-xl opacity-50 z-0"></div>
             </span>
-            <span className="relative inline-block">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent/80">DUELS</span>
-              <Sparkles className="absolute -top-2 -right-4 w-4 h-4 text-accent/80" />
+            <span className="title-duels relative inline-block">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent/80 relative z-10">DUELS</span>
+              <Sparkles className="absolute -top-2 -right-4 w-5 h-5 text-accent/90 animate-twinkle" />
+              {/* Glow effect for DUELS */}
+              <div className="title-glow-effect absolute -inset-3 bg-accent/20 rounded-full blur-xl opacity-50 z-0"></div>
             </span>
           </h2>
           
           {/* Animated Line Under Title */}
-          <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto mb-6 rounded-full"></div>
+          <div 
+            ref={titleLineRef}
+            className="w-32 h-1.5 bg-gradient-to-r from-primary via-accent to-primary mx-auto mb-6 rounded-full"
+          ></div>
           
           <p className="text-white/70 text-lg max-w-2xl mx-auto">
             Challenge other $DUEL holders to epic one-on-one battles. Stake your tokens and fight for glory and rewards!
@@ -217,8 +251,7 @@ const DuelsSection: React.FC = () => {
                 amount={2500}
                 timeRemaining="08:12"
                 status="active"
-              />
-              <DuelCard 
+              />              <DuelCard 
                 duelId={duelIds.duel5}
                 player1="SolanaFan"
                 player2="WaitingForOpponent"
@@ -284,19 +317,21 @@ const DuelsSection: React.FC = () => {
         </div>
       </div>
       
-      {/* Clean, minimal styles */}
+      {/* Added animations for the title effects */}
       <style jsx>{`
-        @keyframes float-slow {
+        @keyframes twinkle {
           0%, 100% {
-            transform: translateY(0) scale(1);
+            opacity: 0.3;
+            transform: scale(0.8);
           }
           50% {
-            transform: translateY(-20px) scale(1.05);
+            opacity: 1;
+            transform: scale(1.2);
           }
         }
         
-        .animate-float-slow {
-          animation: float-slow 15s ease-in-out infinite;
+        .animate-twinkle {
+          animation: twinkle 2s ease-in-out infinite;
         }
       `}</style>
     </section>
@@ -315,7 +350,10 @@ interface DuelCardProps {
 
 const DuelCard: React.FC<DuelCardProps> = ({ duelId, player1, player2, amount, timeRemaining, winner, status }) => {
   return (
-    <div className="duel-card backdrop-blur-sm border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:border-white/20 hover:translate-y-[-4px] relative overflow-hidden">
+    <div className="duel-card backdrop-blur-lg bg-white/5 border border-white/10 rounded-2xl p-6 transition-all duration-300 hover:border-white/20 hover:translate-y-[-4px] relative overflow-hidden shadow-xl">
+      {/* Enhanced glass effect with subtle inner glow */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-40 z-0"></div>
+      
       {/* Status color indicator */}
       <div className={`absolute -top-1 -right-1 -left-1 h-1 rounded-t-2xl ${
         status === 'active' ? 'bg-accent' : 
@@ -323,92 +361,94 @@ const DuelCard: React.FC<DuelCardProps> = ({ duelId, player1, player2, amount, t
         'bg-primary'
       }`}></div>
       
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center">
-          <Swords className="w-5 h-5 text-primary/80 mr-2" />
-          <span className="font-medium">Duel #{duelId}</span>
+      <div className="relative z-10">
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center">
+            <Swords className="w-5 h-5 text-primary/80 mr-2" />
+            <span className="font-medium">Duel #{duelId}</span>
+          </div>
+          <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+            status === 'active' ? 'bg-accent/10 text-accent border border-accent/20' : 
+            status === 'completed' ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 
+            'bg-primary/10 text-primary border border-primary/20'
+          }`}>
+            {status === 'active' ? (
+              <div className="flex items-center">
+                <Flame className="w-3 h-3 mr-1" />
+                In Progress
+              </div>
+            ) : status === 'completed' ? (
+              <div className="flex items-center">
+                <Shield className="w-3 h-3 mr-1" />
+                Completed
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <Target className="w-3 h-3 mr-1" />
+                Open Challenge
+              </div>
+            )}
+          </div>
         </div>
-        <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-          status === 'active' ? 'bg-accent/10 text-accent border border-accent/20' : 
-          status === 'completed' ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 
-          'bg-primary/10 text-primary border border-primary/20'
-        }`}>
-          {status === 'active' ? (
-            <div className="flex items-center">
-              <Flame className="w-3 h-3 mr-1" />
-              In Progress
+        
+        <div className="flex justify-between items-center mb-6">
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-2 border border-white/10">
+              <User className="w-6 h-6 text-white/70" />
             </div>
-          ) : status === 'completed' ? (
-            <div className="flex items-center">
-              <Shield className="w-3 h-3 mr-1" />
-              Completed
+            <p className="text-sm font-medium truncate max-w-[100px]">{player1}</p>
+            {status === 'completed' && winner === player1 && (
+              <Award className="w-5 h-5 text-yellow-500 mx-auto mt-1" />
+            )}
+          </div>
+          
+          <div className="flex flex-col items-center">
+            <div className="text-2xl font-bold text-primary">{amount}</div>
+            <div className="text-xs text-white/50">$DUEL</div>
+          </div>
+          
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-2 border border-white/10">
+              <User className="w-6 h-6 text-white/70" />
+            </div>
+            <p className="text-sm font-medium truncate max-w-[100px]">{player2}</p>
+            {status === 'completed' && winner === player2 && (
+              <Award className="w-5 h-5 text-yellow-500 mx-auto mt-1" />
+            )}
+          </div>
+        </div>
+        
+        <div className="mt-4 border-t border-white/10 pt-4 flex justify-between items-center">
+          {status === 'completed' ? (
+            <div className="text-sm text-white/70">
+              Winner: <span className="text-green-500 font-medium">{winner}</span>
             </div>
           ) : (
-            <div className="flex items-center">
-              <Target className="w-3 h-3 mr-1" />
-              Open Challenge
+            <div className="text-sm text-white/70">
+              {status === 'active' ? 'Ends in:' : 'Status:'} <span className="text-white font-medium">{timeRemaining}</span>
             </div>
           )}
-        </div>
-      </div>
-      
-      <div className="flex justify-between items-center mb-6">
-        <div className="text-center">
-          <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-2 border border-white/10">
-            <User className="w-6 h-6 text-white/70" />
-          </div>
-          <p className="text-sm font-medium truncate max-w-[100px]">{player1}</p>
-          {status === 'completed' && winner === player1 && (
-            <Award className="w-5 h-5 text-yellow-500 mx-auto mt-1" />
+          
+          {status === 'open' && (
+            <button className="btn-primary py-1 px-4 text-sm relative overflow-hidden group">
+              <span className="relative z-10">Join Duel</span>
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-primary via-accent to-primary bg-size-200 transition-opacity duration-300"></div>
+            </button>
+          )}
+          
+          {status === 'active' && (
+            <button className="btn-outline py-1 px-4 text-sm group">
+              <Flame className="w-3 h-3 inline mr-1 text-accent" />
+              Watch
+            </button>
+          )}
+          
+          {status === 'completed' && (
+            <button className="btn-outline py-1 px-4 text-sm">
+              Details
+            </button>
           )}
         </div>
-        
-        <div className="flex flex-col items-center">
-          <div className="text-2xl font-bold text-primary">{amount}</div>
-          <div className="text-xs text-white/50">$DUEL</div>
-        </div>
-        
-        <div className="text-center">
-          <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-2 border border-white/10">
-            <User className="w-6 h-6 text-white/70" />
-          </div>
-          <p className="text-sm font-medium truncate max-w-[100px]">{player2}</p>
-          {status === 'completed' && winner === player2 && (
-            <Award className="w-5 h-5 text-yellow-500 mx-auto mt-1" />
-          )}
-        </div>
-      </div>
-      
-      <div className="mt-4 border-t border-white/10 pt-4 flex justify-between items-center">
-        {status === 'completed' ? (
-          <div className="text-sm text-white/70">
-            Winner: <span className="text-green-500 font-medium">{winner}</span>
-          </div>
-        ) : (
-          <div className="text-sm text-white/70">
-            {status === 'active' ? 'Ends in:' : 'Status:'} <span className="text-white font-medium">{timeRemaining}</span>
-          </div>
-        )}
-        
-        {status === 'open' && (
-          <button className="btn-primary py-1 px-4 text-sm relative overflow-hidden group">
-            <span className="relative z-10">Join Duel</span>
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-primary via-accent to-primary bg-size-200 transition-opacity duration-300"></div>
-          </button>
-        )}
-        
-        {status === 'active' && (
-          <button className="btn-outline py-1 px-4 text-sm group">
-            <Flame className="w-3 h-3 inline mr-1 text-accent" />
-            Watch
-          </button>
-        )}
-        
-        {status === 'completed' && (
-          <button className="btn-outline py-1 px-4 text-sm">
-            Details
-          </button>
-        )}
       </div>
     </div>
   );

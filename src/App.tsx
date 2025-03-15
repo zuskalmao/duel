@@ -14,6 +14,11 @@ function App() {
   const lastPositionRef = useRef({ x: 0, y: 0 });
   const cursorTrailIdRef = useRef(0);
 
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   // Enhanced cursor effect with continuous trail animation
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -125,7 +130,7 @@ function App() {
       {/* Fixed Header */}
       <Header />
       
-      {/* Main Content with padding for fixed header      {/* Main Content with padding for fixed header */}
+      {/* Main Content with padding for fixed header */}
       <div className="pt-32">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>

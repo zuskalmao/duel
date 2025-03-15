@@ -170,7 +170,7 @@ const JackpotSection: React.FC = () => {
                     </span>
                   </div>
                   {/* Enhanced glow effect for better visibility */}
-                  <div className="absolute -inset-1 bg-gradient                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-accent/30 blur-xl rounded-xl opacity-50 -z-10"></div>
+                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-accent/30 blur-xl rounded-xl opacity-50 -z-10"></div>
                 </div>
               </div>
               

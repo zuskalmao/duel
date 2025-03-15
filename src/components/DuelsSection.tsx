@@ -202,6 +202,7 @@ const DuelsSection: React.FC = () => {
               className={`px-6 py-2 rounded-full transition-all ${
                 selectedTab === 'active' 
                   ? 'bg-primary text-white' 
+                  : 'text                  ? 'bg-primary text-white' 
                   : 'text-white/70 hover:text-white'
               }`}
               onClick={() => setSelectedTab('active')}
@@ -353,51 +354,58 @@ const DuelCard: React.FC<DuelCardProps> = ({ duelId, player1, player2, amount, t
   useEffect(() => {
     if (!cardRef.current) return;
     
-    // Set initial state 
+    // Set initial state with perspective for 3D effect
     gsap.set(cardRef.current, { transformPerspective: 1000 });
     
-    // Clean subtle hover animation
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!cardRef.current) return;
+    // Build the card tilt animation function
+    const buildTiltAnimation = (card: HTMLElement) => {
+      let animation: gsap.core.Tween | null = null;
       
-      const card = cardRef.current;
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left; // x position within the element
-      const y = e.clientY - rect.top; // y position within the element
+      // Mouse move handler for tilt effect
+      const handleMouseMove = (e: MouseEvent) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        // Calculate tilt based on mouse position relative to card center
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / 30; // Reduced divisor for slightly stronger effect
+        const rotateY = (centerX - x) / 30;
+        
+        // Kill any existing animation
+        if (animation) animation.kill();
+        
+        // Create new tilt animation
+        animation = gsap.to(card, {
+          rotationX: rotateX * 0.8, // Slightly increased for better visibility
+          rotationY: rotateY * 0.8,
+          boxShadow: `${rotateY * -0.7}px ${rotateX * 0.7}px 20px rgba(138, 43, 226, 0.2)`,
+          duration: 0.4,
+          ease: "power2.out"
+        });
+      };
       
-      // Calculate rotation based on mouse position (very subtle)
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = (y - centerY) / 30; // Divide by higher number for more subtle effect
-      const rotateY = (centerX - x) / 30;
+      // Reset on mouse leave
+      const handleMouseLeave = () => {
+        if (animation) animation.kill();
+        
+        animation = gsap.to(card, {
+          rotationX: 0,
+          rotationY: 0,
+          boxShadow: "0 8px 32px rgba(138, 43, 226, 0.08)",
+          duration: 0.5,
+          ease: "power2.out"
+        });
+      };
       
-      // Apply the transform
-      gsap.to(card, {
-        rotationX: rotateX * 0.5, // Reduced strength for subtlety
-        rotationY: rotateY * 0.5,
-        boxShadow: `
-          ${rotateY * -0.5}px ${rotateX * 0.5}px 20px rgba(138, 43, 226, 0.15), 
-          0 10px 30px rgba(0, 0, 0, 0.1)
-        `,
-        duration: 0.5,
-        ease: "power2.out"
-      });
+      return { handleMouseMove, handleMouseLeave };
     };
     
-    // Reset on mouse leave
-    const handleMouseLeave = () => {
-      if (!cardRef.current) return;
-      
-      gsap.to(cardRef.current, {
-        rotationX: 0,
-        rotationY: 0,
-        boxShadow: "0 8px 32px rgba(138, 43, 226, 0.08)",
-        duration: 0.5,
-        ease: "power2.out"
-      });
-    };
-    
+    // Apply the animations
     const card = cardRef.current;
+    const { handleMouseMove, handleMouseLeave } = buildTiltAnimation(card);
+    
     card.addEventListener("mousemove", handleMouseMove);
     card.addEventListener("mouseleave", handleMouseLeave);
     
@@ -411,6 +419,7 @@ const DuelCard: React.FC<DuelCardProps> = ({ duelId, player1, player2, amount, t
     <div 
       ref={cardRef}
       className="duel-card backdrop-blur-lg bg-white/5 border border-white/10 rounded-2xl p-6 transition-all duration-300 hover:border-white/20 relative overflow-hidden shadow-xl"
+      style={{ opacity: 0, transform: 'translateY(20px)', willChange: 'transform, box-shadow' }}
     >
       {/* Enhanced glass effect with subtle inner glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-40 z-0"></div>

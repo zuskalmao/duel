@@ -8,6 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 const JackpotSection: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const jackpotAmountRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const [timeRemaining, setTimeRemaining] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [participants, setParticipants] = useState(467);
   const [jackpotAmount, setJackpotAmount] = useState(98712);
@@ -122,6 +123,37 @@ const JackpotSection: React.FC = () => {
           ease: "sine.inOut"
         });
       }
+
+      // Title specific animations
+      if (titleRef.current) {
+        // Initial appear animation for title parts
+        gsap.from(".title-daily, .title-jackpot", {
+          opacity: 0,
+          y: 10,
+          stagger: 0.08,
+          duration: 0.6,
+          delay: 0.3,
+          ease: "power2.out"
+        });
+        
+        // Subtle continuous animation
+        gsap.to(['.title-daily', '.title-jackpot'], {
+          y: '-=3',
+          duration: 2,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+        
+        // Glow animation
+        gsap.to('.title-glow-effect', {
+          opacity: 0.5,
+          duration: 2,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut"
+        });
+      }
     }
   }, []);
   
@@ -130,13 +162,21 @@ const JackpotSection: React.FC = () => {
       {/* REMOVED: Subtle animated particles */}
       
       <div className="container mx-auto px-4 relative z-10">
-        {/* Title */}
+        {/* Title - Updated with new styling, removed underline */}
         <div className="jackpot-title text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-3 inline-block">
-            <span className="text-white">DAILY </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">JACKPOT</span>
+          <h2 ref={titleRef} className="text-5xl md:text-6xl font-bold mb-3 inline-block relative">
+            <span className="title-daily relative inline-block mr-2">
+              <span className="text-white relative z-10">DAILY</span>
+              {/* Subtle glow effect for DAILY */}
+              <div className="title-glow-effect absolute -inset-3 bg-white/10 rounded-full blur-xl opacity-30 z-0"></div>
+            </span>
+            <span className="title-jackpot relative inline-block">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent relative z-10">JACKPOT</span>
+              {/* Subtle glow effect for JACKPOT */}
+              <div className="title-glow-effect absolute -inset-3 bg-gradient-to-r from-primary/20 to-accent/20 rounded-full blur-xl opacity-30 z-0"></div>
+            </span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto mb-6 rounded-full"></div>
+          
           <p className="text-white/70 max-w-2xl mx-auto text-lg">
             Join our massive daily jackpot event at 8PM EST! Stake your tokens to win the largest pot in the $DUEL ecosystem.
           </p>

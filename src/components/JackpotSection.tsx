@@ -7,6 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const JackpotSection: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const jackpotAmountRef = useRef<HTMLDivElement>(null);
   const [timeRemaining, setTimeRemaining] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [participants, setParticipants] = useState(467);
   const [jackpotAmount, setJackpotAmount] = useState(98712);
@@ -98,18 +99,6 @@ const JackpotSection: React.FC = () => {
         }
       });
       
-      // Floating particles
-      gsap.to(".jackpot-particle", {
-        y: -20,
-        x: 10,
-        opacity: 0.8,
-        duration: 3,
-        ease: "power1.inOut",
-        stagger: 0.2,
-        repeat: -1,
-        yoyo: true
-      });
-      
       // Card elements
       gsap.from(".card-content > *", {
         opacity: 0,
@@ -122,26 +111,23 @@ const JackpotSection: React.FC = () => {
           toggleActions: "play none none none"
         }
       });
+      
+      // Enhanced jackpot amount pulsing with better contrast
+      if (jackpotAmountRef.current) {
+        gsap.to(jackpotAmountRef.current, {
+          boxShadow: "0 0 30px rgba(138, 43, 226, 0.4)",
+          duration: 2,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut"
+        });
+      }
     }
   }, []);
   
   return (
     <section id="jackpot" ref={sectionRef} className="py-20 md:py-32 relative">
-      {/* Subtle animated particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <div 
-            key={i}
-            className="jackpot-particle absolute w-1.5 h-1.5 rounded-full opacity-20"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              background: `radial-gradient(circle, ${i % 2 ? 'var(--primary)' : 'var(--accent)'}, transparent 70%)`,
-              boxShadow: `0 0 10px 2px ${i % 2 ? 'rgba(138, 43, 226, 0.2)' : 'rgba(255, 105, 180, 0.2)'}`
-            }}
-          />
-        ))}
-      </div>
+      {/* REMOVED: Subtle animated particles */}
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Title */}
@@ -166,14 +152,25 @@ const JackpotSection: React.FC = () => {
           {/* Card Content */}
           <div className="card-content relative z-10 p-8 md:p-12">
             <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-              {/* Jackpot Amount */}
+              {/* Jackpot Amount - Improved contrast */}
               <div className="text-center md:text-left mb-8 md:mb-0">
-                <h3 className="text-xl text-white/80 font-medium mb-2">Today's Jackpot</h3>
-                <div className="text-5xl md:text-6xl font-bold mb-2 relative">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-accent animate-pulse-slow">
-                    {jackpotAmount.toLocaleString()} $DUEL
-                  </span>
-                  <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-accent/20 blur-xl rounded-full opacity-40 animate-pulse-slow -z-10"></div>
+                <h3 className="text-xl text-white/90 font-medium mb-2">Today's Jackpot</h3>
+                <div 
+                  ref={jackpotAmountRef}
+                  className="relative px-6 py-3 rounded-xl bg-black/40 backdrop-blur-md border border-white/10"
+                >
+                  <div className="text-5xl md:text-6xl font-bold">
+                    {/* Higher contrast with white text and drop shadow */}
+                    <span className="text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">
+                      {jackpotAmount.toLocaleString()}
+                    </span>
+                    {' '}
+                    <span className="text-primary font-bold drop-shadow-[0_0_8px_rgba(138,43,226,0.5)]">
+                      $DUEL
+                    </span>
+                  </div>
+                  {/* Enhanced glow effect for better visibility */}
+                  <div className="absolute -inset-1 bg-gradient                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-accent/30 blur-xl rounded-xl opacity-50 -z-10"></div>
                 </div>
               </div>
               

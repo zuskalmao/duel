@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { Swords, User, Award, ArrowRight, Sparkles, Shield, Target, Flame } from 'lucide-react';
+import { Swords, User, Award, ArrowRight, Shield, Target, Flame } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -9,7 +9,6 @@ const DuelsSection: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const titleTextRef = useRef<HTMLHeadingElement>(null);
-  const titleLineRef = useRef<HTMLDivElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [selectedTab, setSelectedTab] = useState('active');
@@ -34,7 +33,7 @@ const DuelsSection: React.FC = () => {
     // Preload any duel cards that might be shown initially to prevent loading issues
     const preloadCards = document.querySelectorAll('.duel-card');
     if (preloadCards.length > 0) {
-      gsap.set(preloadCards, { opacity: 0, y: 40 });
+      gsap.set(preloadCards, { opacity: 0, y: 20 });
     }
 
     // Set up animations with delay to ensure DOM is ready
@@ -54,53 +53,34 @@ const DuelsSection: React.FC = () => {
           }
         });
         
-        // Enhanced title text animations
+        // Consistent and subtle title text animations
         if (titleTextRef.current) {
-          // Initial appear animation
+          // Initial appear animation - synchronized timing
           gsap.from(titleTextRef.current.querySelectorAll('span'), {
             opacity: 0,
-            y: 20,
-            stagger: 0.1,
-            duration: 0.8,
+            y: 10,
+            stagger: 0.08,
+            duration: 0.6,
             delay: 0.3,
             ease: "power2.out"
           });
           
-          // Continuous subtle float animation
-          gsap.to(titleTextRef.current.querySelector('.title-1v1'), {
-            y: -5,
-            duration: 1.2,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut"
-          });
-          
-          gsap.to(titleTextRef.current.querySelector('.title-duels'), {
-            y: 5,
-            duration: 1.5,
+          // More subtle continuous animation with consistent timing
+          gsap.to(['.title-1v1', '.title-duels'], {
+            y: '-=3',
+            duration: 2,
             repeat: -1,
             yoyo: true,
             ease: "sine.inOut",
-            delay: 0.2
           });
           
-          // Glow animation
+          // Glow animation with consistent timing
           gsap.to('.title-glow-effect', {
-            opacity: 0.7,
-            duration: 1.8,
+            opacity: 0.5,
+            duration: 2,
             repeat: -1,
             yoyo: true,
             ease: "sine.inOut"
-          });
-        }
-        
-        // Animated line
-        if (titleLineRef.current) {
-          gsap.from(titleLineRef.current, {
-            width: 0,
-            duration: 1.2,
-            delay: 0.5,
-            ease: "power3.out"
           });
         }
         
@@ -115,15 +95,54 @@ const DuelsSection: React.FC = () => {
           }
         });
         
+        // Animate duel cards with subtle effects
         gsap.to(".duel-card", {
           opacity: 1,
           y: 0,
-          stagger: 0.15,
-          duration: 0.8,
+          stagger: 0.1,
+          duration: 0.6,
           scrollTrigger: {
             trigger: contentRef.current,
             start: "top 90%",
             toggleActions: "play none none none"
+          },
+          onComplete: () => {
+            // Add subtle continuous animations to cards after they appear
+            gsap.to(".duel-card", {
+              boxShadow: "0 8px 32px rgba(138, 43, 226, 0.15)",
+              duration: 2,
+              repeat: -1,
+              yoyo: true,
+              stagger: {
+                each: 0.5,
+                grid: "auto",
+                from: "center"
+              }
+            });
+            
+            // Very subtle scale animation for cards
+            gsap.to(".duel-card", {
+              scale: 1.01,
+              duration: 3,
+              repeat: -1,
+              yoyo: true,
+              stagger: {
+                each: 0.7,
+                grid: "auto",
+                from: "random"
+              },
+              ease: "sine.inOut"
+            });
+            
+            // Status indicator pulse
+            gsap.to(".status-indicator", {
+              opacity: 0.7,
+              duration: 1.5,
+              repeat: -1,
+              yoyo: true,
+              stagger: 0.3,
+              ease: "sine.inOut"
+            });
           }
         });
       }
@@ -149,29 +168,24 @@ const DuelsSection: React.FC = () => {
           className="text-center max-w-4xl mx-auto mb-16"
           style={{ opacity: 0, transform: 'translateY(30px)' }}
         >
-          {/* Enhanced, more dynamic title */}
+          {/* Simplified, more subtle title - no sparkles or underline */}
           <h2 
             ref={titleTextRef}
             className="text-5xl md:text-6xl font-bold mb-4 relative"
           >
             <span className="title-1v1 relative inline-block mr-2">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/80 relative z-10">1v1</span>
-              {/* Glow effect for 1v1 */}
-              <div className="title-glow-effect absolute -inset-3 bg-primary/20 rounded-full blur-xl opacity-50 z-0"></div>
+              {/* Subtle glow effect for 1v1 */}
+              <div className="title-glow-effect absolute -inset-3 bg-primary/20 rounded-full blur-xl opacity-30 z-0"></div>
             </span>
             <span className="title-duels relative inline-block">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent/80 relative z-10">DUELS</span>
-              <Sparkles className="absolute -top-2 -right-4 w-5 h-5 text-accent/90 animate-twinkle" />
-              {/* Glow effect for DUELS */}
-              <div className="title-glow-effect absolute -inset-3 bg-accent/20 rounded-full blur-xl opacity-50 z-0"></div>
+              {/* Subtle glow effect for DUELS - no sparkles */}
+              <div className="title-glow-effect absolute -inset-3 bg-accent/20 rounded-full blur-xl opacity-30 z-0"></div>
             </span>
           </h2>
           
-          {/* Animated Line Under Title */}
-          <div 
-            ref={titleLineRef}
-            className="w-32 h-1.5 bg-gradient-to-r from-primary via-accent to-primary mx-auto mb-6 rounded-full"
-          ></div>
+          {/* Removed animated underline */}
           
           <p className="text-white/70 text-lg max-w-2xl mx-auto">
             Challenge other $DUEL holders to epic one-on-one battles. Stake your tokens and fight for glory and rewards!
@@ -244,14 +258,15 @@ const DuelsSection: React.FC = () => {
                 timeRemaining="Wait for opponent"
                 status="open"
               />
-                            <DuelCard 
+              <DuelCard 
                 duelId={duelIds.duel4}
                 player1="TradeMaster"
                 player2="TokenWhale"
                 amount={2500}
                 timeRemaining="08:12"
                 status="active"
-              />              <DuelCard 
+              />              
+              <DuelCard 
                 duelId={duelIds.duel5}
                 player1="SolanaFan"
                 player2="WaitingForOpponent"
@@ -316,24 +331,6 @@ const DuelsSection: React.FC = () => {
           </button>
         </div>
       </div>
-      
-      {/* Added animations for the title effects */}
-      <style jsx>{`
-        @keyframes twinkle {
-          0%, 100% {
-            opacity: 0.3;
-            transform: scale(0.8);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1.2);
-          }
-        }
-        
-        .animate-twinkle {
-          animation: twinkle 2s ease-in-out infinite;
-        }
-      `}</style>
     </section>
   );
 };
@@ -349,13 +346,77 @@ interface DuelCardProps {
 }
 
 const DuelCard: React.FC<DuelCardProps> = ({ duelId, player1, player2, amount, timeRemaining, winner, status }) => {
+  // Added ref to help with individual card animations
+  const cardRef = useRef<HTMLDivElement>(null);
+  
+  // Individual card animation on hover
+  useEffect(() => {
+    if (!cardRef.current) return;
+    
+    // Set initial state 
+    gsap.set(cardRef.current, { transformPerspective: 1000 });
+    
+    // Clean subtle hover animation
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!cardRef.current) return;
+      
+      const card = cardRef.current;
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left; // x position within the element
+      const y = e.clientY - rect.top; // y position within the element
+      
+      // Calculate rotation based on mouse position (very subtle)
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (y - centerY) / 30; // Divide by higher number for more subtle effect
+      const rotateY = (centerX - x) / 30;
+      
+      // Apply the transform
+      gsap.to(card, {
+        rotationX: rotateX * 0.5, // Reduced strength for subtlety
+        rotationY: rotateY * 0.5,
+        boxShadow: `
+          ${rotateY * -0.5}px ${rotateX * 0.5}px 20px rgba(138, 43, 226, 0.15), 
+          0 10px 30px rgba(0, 0, 0, 0.1)
+        `,
+        duration: 0.5,
+        ease: "power2.out"
+      });
+    };
+    
+    // Reset on mouse leave
+    const handleMouseLeave = () => {
+      if (!cardRef.current) return;
+      
+      gsap.to(cardRef.current, {
+        rotationX: 0,
+        rotationY: 0,
+        boxShadow: "0 8px 32px rgba(138, 43, 226, 0.08)",
+        duration: 0.5,
+        ease: "power2.out"
+      });
+    };
+    
+    const card = cardRef.current;
+    card.addEventListener("mousemove", handleMouseMove);
+    card.addEventListener("mouseleave", handleMouseLeave);
+    
+    return () => {
+      card.removeEventListener("mousemove", handleMouseMove);
+      card.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
+  
   return (
-    <div className="duel-card backdrop-blur-lg bg-white/5 border border-white/10 rounded-2xl p-6 transition-all duration-300 hover:border-white/20 hover:translate-y-[-4px] relative overflow-hidden shadow-xl">
+    <div 
+      ref={cardRef}
+      className="duel-card backdrop-blur-lg bg-white/5 border border-white/10 rounded-2xl p-6 transition-all duration-300 hover:border-white/20 relative overflow-hidden shadow-xl"
+    >
       {/* Enhanced glass effect with subtle inner glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-40 z-0"></div>
       
-      {/* Status color indicator */}
-      <div className={`absolute -top-1 -right-1 -left-1 h-1 rounded-t-2xl ${
+      {/* Status color indicator with animation class */}
+      <div className={`status-indicator absolute -top-1 -right-1 -left-1 h-1 rounded-t-2xl ${
         status === 'active' ? 'bg-accent' : 
         status === 'completed' ? 'bg-green-500' : 
         'bg-primary'

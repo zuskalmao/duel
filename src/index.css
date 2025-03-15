@@ -142,7 +142,7 @@ html {
 }
 
 /* Animated gradient text - same properties for both */
-.animated-gradient-text {
+.animated-gradient-text.animated-gradient-text {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -231,4 +231,14 @@ html {
 
 .animate-pulse-radial {
   animation: pulse-radial 8s ease-in-out infinite;
+}
+
+/* Add class for custom PVP Battle card cursor interaction */
+.duel-card {
+  cursor: none !important;
+}
+
+.duel-card:hover {
+  cursor: none !important;
+  z-index: 10;
 }

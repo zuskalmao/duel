@@ -38,9 +38,9 @@ function App() {
         }));
       });
       
-      // Check if mouse is over clickable element
+      // Check if mouse is over clickable element - enhanced to detect PvP battle cards
       const element = document.elementFromPoint(clientX, clientY);
-      const isClickable = element?.closest('a, button, [role="button"], .cursor-pointer') !== null;
+      const isClickable = element?.closest('a, button, [role="button"], .cursor-pointer, .duel-card') !== null;
       setIsPointerOverClickable(isClickable);
     };
 

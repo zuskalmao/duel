@@ -417,7 +417,7 @@ const DuelCard: React.FC<DuelCardProps> = ({ duelId, player1, player2, amount, t
   return (
     <div 
       ref={cardRef}
-      className="duel-card backdrop-blur-lg bg-white/5 border border-white/10 rounded-2xl p-6 transition-all duration-300 hover:border-white/20 relative overflow-hidden shadow-xl"
+      className="duel-card backdrop-blur-lg bg-white/5 border border-white/10 rounded-2xl p-6 transition-all duration-300 hover:border-white/20 relative overflow-hidden shadow-xl cursor-pointer"
       style={{ opacity: 0, transform: 'translateY(20px)', willChange: 'transform, box-shadow' }}
     >
       {/* Enhanced glass effect with subtle inner glow */}
